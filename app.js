@@ -1,6 +1,8 @@
 var RtmClient = require('@slack/client').RtmClient;
 var MemoryDataStore = require('@slack/client').MemoryDataStore;
 
+var moment = require('moment');
+
 var token = process.env.SLACK_API_TOKEN || '';
 
 //var token = 'GET TOKEN FROM ENV VARIABLE';
@@ -126,6 +128,13 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
           var taskId = 0;
 
           // validate date
+          var dateValid = moment(userDate, "YYYY-MM-DD").isValid();
+
+          if(dateValid === false) {
+            console.log(ENTER_COMMAND + ": Invalid date " + userDate + ", must be YYYY-MM-DD");
+            rtm.sendMessage('Error! Date must be in format YYYY-MM-DD', message.channel);
+          }
+
 
           // validate hours
           var userHoursFloat = parseFloat(userHours);
