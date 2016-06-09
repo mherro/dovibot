@@ -1,6 +1,3 @@
-Dovico Slack Help Doc
-=====================
-
 Command:  enter <project> <task> <yyyy-mm-dd> <hours> <description>
 Command:  view today
 Command:  view 

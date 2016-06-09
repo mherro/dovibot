@@ -82,20 +82,28 @@ var submitTime = function(username, startDate, endDate, callback) {
 
 var viewTime = function(username, startDate, endDate) {
 	return new Promise(function(resolve, reject) {
-		var url = 'https://api.dovico.com/TimeEntries/?version=5&daterange=' + startDate + '%20' + endDate;
-		console.log('viewing time for :', url);
-		requestGet(username,url).then(function(result){
-			var text = "";
+		getUserId(username, function(err, userId) {
+			if(err) {
+				reject(err);
+			} else {
+				var url = 'https://api.dovico.com/TimeEntries/?version=5&daterange=' + startDate + '%20' + endDate;
+				console.log('viewing time for :', url);
+				requestGet(username,url).then(function(result){
+					var text = "";
 
-			result.TimeEntries.forEach(function(entry) {
-				text += entry.Date + " - " +  entry.Project.Name + " - " 
-					+ entry.Task.Name + " " + entry.TotalHours + "\n\r";
-			});
+					result.TimeEntries.forEach(function(entry) {
+						if(entry.Employee.ID == userId){
+							text += entry.Date + " - " +  entry.Project.Name + " - " 
+							+ entry.Task.Name + " " + entry.TotalHours + "\n\r";
+						}
+					});
 
-			resolve(text);
-		},
-		function(error){
-			reject(error);
+					resolve(text);
+				},
+				function(error){
+					reject(error);
+				});
+			}
 		});
 	});
 };
