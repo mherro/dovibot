@@ -236,12 +236,19 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 
       } else if(commandToken === VIEW_COMMAND) {
 
-        dovico.viewTime(username, startDate, endDate).then(function() {
-
-        });
-
-
-
+        var startDate = '';
+        var endDate = '';
+        dovico.viewTime(username, startDate, endDate).then(function(time){
+            rtm.sendMessage('Time for ' + startDate + ' to ' + endDate + '\n' + time, message.channel, function messageSent() {
+              console.log("view time" , time);
+            });
+          },
+          function(error){
+           rtm.sendMessage('Error listing time', message.channel, function messageSent() {
+              console.log("Error listing time", error );
+            });
+          }
+        );
       } else if(commandToken === TASKS_COMMAND) {
           // Command format:
           // > tasks"
