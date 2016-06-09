@@ -213,12 +213,19 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
                     rtm.sendMessage('Task ' + userTaskName + ' not found', message.channel);  
                   } else {
 
-                    // TODO: fill out paremeters
-                    dovico.enterTime();
+                    dovico.enterTime(username, projectId, taskId, userDate, userHours, userDescription, function(err, res) {
 
+                      if(err){
+                        console.log('Error getting token', err);
+                        rtm.sendMessage('Error saving time!', message.channel);  
+                      } else {
+                        console.log('Successfully entered time');
+                        rtm.sendMessage('Time successfully saved!', message.channel);  
+                      }
+
+                    });
 
                   }
-
 
                 });
             }
@@ -229,7 +236,9 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 
       } else if(commandToken === VIEW_COMMAND) {
 
-        dovico.viewTime(username, startDate, endDate).then(function)
+        dovico.viewTime(username, startDate, endDate).then(function() {
+
+        });
 
 
 

@@ -22,25 +22,41 @@ var getUserId = function(username, callback) {
     callback(null, res.Employees[0].ID);
   }, function(error) {
     callback(error, null);
-  }
-)};
+  });
+}
 
 var enterTime = function(username, projectId, taskId, date, hours, description, callback) {
-  var formData = {
-    "ProjectID": projectId,
-    "TaskID": taskId,
-    "EmployeeID": getUserId,
-    "Date": date,
-    "TotalHours": hours,
-    "Description": description
-  }
 
-  requestPost(username, 'https://api.dovico.com/TimeEntries/?version=5', formData).then(function(res) {
-    callback(null, res);
-  }, function(error) {
-    callback(error, null);
-  }
-)};
+
+  getUserId(username, function(err, userId) {
+
+  	if(err) {
+    	callback(err, null);
+  	} else {
+
+
+	  var formData = {
+	    "ProjectID": projectId,
+	    "TaskID": taskId,
+	    "EmployeeID": userId,
+	    "Date": date,
+	    "TotalHours": hours,
+	    "Description": description
+	  }
+
+	  requestPost(username, 'https://api.dovico.com/TimeEntries/?version=5', formData).then(function(res) {
+		    callback(null, res);
+		  }, function(error) {
+		    callback(error, null);
+		  }
+		);
+
+
+  	}
+
+  });
+
+}
 
 var submitTime = function() {
 
@@ -123,6 +139,10 @@ var requestPost = function(username, url, formData) {
 					resolve(info);
 				} else {
 					console.log('request error: ', error, response.statusCode);
+
+					if(!error) {
+						error = "Status code: " + response.statusCode;
+					}
 
 					reject(error);
 				}
