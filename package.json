@@ -4,7 +4,8 @@
   "description": "dovico slack bot integration",
   "main": "app.js",
   "dependencies": {
-    "@slack/client" : "3.1.0"
+    "@slack/client" : "3.1.0",
+    "redis": "^2.6.1"
   },
   "scripts": {
     "test": "gulp test",
@@ -20,7 +21,4 @@
     "url": "https://github.com/cweilemann/dovibot/issues"
   },
   "homepage": "https://github.com/cweilemann/dovibot#readme",
-  "dependencies": {
-    "redis": "^2.6.1"
-  }
 }
