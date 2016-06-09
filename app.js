@@ -178,17 +178,17 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
                   // TODO: verify task json format
                   tasks.Assignments.forEach(function(task) {
 
-                    var taskname = task.Name.toLowerCase();
+                    var taskName = task.Name.toLowerCase();
 
                     if(taskName === userTaskName) {
-
+                      console.log("Found task: " + taskName)
                       taskId = task.ItemID;
 
                     }
 
                   });
 
-
+                  console.log("Task ID: " + taskId);
 
 
 

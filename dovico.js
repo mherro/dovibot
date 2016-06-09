@@ -37,6 +37,9 @@ var getProjects = function(username) {
 }
 var clientid = process.env.DOVICO_CLIENT_ID;
 
+var getTasks = function(username, projectID) {
+	return requestGet(username, 'https://api.dovico.com/Assignments/P' + projectID + '?version=5')
+}
 
 var requestGet = function(username,url) {
 	return new Promise(function(resolve, reject){
@@ -72,5 +75,6 @@ var requestGet = function(username,url) {
 
 module.exports = {
 	'setupToken' : setupToken,
-	'getProjects' : getProjects
+	'getProjects' : getProjects,
+	'getTasks' : getTasks
 };
