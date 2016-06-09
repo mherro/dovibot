@@ -17,6 +17,14 @@ var setupToken = function(username, token){
 	});	
 }
 
+var getUserId = function(username, callback) {
+  requestGet(username, 'https://api.dovico.com/Employees/Me/?version=5').then(function(res) {
+    callback(null, res.Employees[0].ID);
+  }, function(error) {
+    callback(error, null);
+  }
+)};
+
 var enterTime = function() {
 
 
@@ -38,7 +46,7 @@ var getProjects = function(username) {
 var clientid = process.env.DOVICO_CLIENT_ID;
 
 var getTasks = function(username, projectID) {
-	return requestGet(username, 'https://api.dovico.com/Assignments/P' + projectID + '?version=5')
+	return requestGet(username, 'https://api.dovico.com/Assignments/P' + projectID + '?version=5');
 }
 
 var requestGet = function(username,url) {
@@ -76,5 +84,6 @@ var requestGet = function(username,url) {
 module.exports = {
 	'setupToken' : setupToken,
 	'getProjects' : getProjects,
-	'getTasks' : getTasks
+	'getTasks' : getTasks,
+	'getUserId' : getUserId,
 };
