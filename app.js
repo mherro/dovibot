@@ -1,6 +1,8 @@
 var RtmClient = require('@slack/client').RtmClient;
 var MemoryDataStore = require('@slack/client').MemoryDataStore;
 
+var moment = require('moment');
+
 var token = process.env.SLACK_API_TOKEN || '';
 
 //var token = 'GET TOKEN FROM ENV VARIABLE';
@@ -20,6 +22,7 @@ rtm.on(RTM_EVENTS.HELLO, function (hello) {
 
 var SETUP_COMMAND = "setup";
 var ENTER_COMMAND = "enter";
+var VIEW_COMMAND = "view";
 var PROJECT_COMMAND = "project";
 var TASKS_COMMAND = "tasks";
 var INFO_COMMAND = "info";
@@ -126,6 +129,13 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
           var taskId = 0;
 
           // validate date
+          var dateValid = moment(userDate, "YYYY-MM-DD").isValid();
+
+          if(dateValid === false) {
+            console.log(ENTER_COMMAND + ": Invalid date " + userDate + ", must be YYYY-MM-DD");
+            rtm.sendMessage('Error! Date must be in format YYYY-MM-DD', message.channel);
+          }
+
 
           // validate hours
           var userHoursFloat = parseFloat(userHours);
@@ -198,12 +208,38 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 
                   console.log("Task ID: " + taskId);
 
+                  if(taskId == 0) {
+                    console.log('Task ' + userTaskName + ' not found');
+                    rtm.sendMessage('Task ' + userTaskName + ' not found', message.channel);  
+                  } else {
+
+                    // TODO: fill out paremeters
+                    dovico.enterTime();
+
+
+                  }
 
 
                 });
             }
 
 
+          });
+
+
+      } else if(commandToken === VIEW_COMMAND) {
+        var startDate = '';
+        var endDate = '';
+        dovico.viewTime(username, startDate, endDate).then(function(time){
+           
+            rtm.sendMessage('Time for ' + startDate + ' to ' + endDate + '\n' + time, message.channel, function messageSent() {
+              console.log("view time" , time);
+            });
+          },
+          function(error){
+           rtm.sendMessage('Error listing time', message.channel, function messageSent() {
+              console.log("Error listing time", error );
+            });
           });
 
 
@@ -230,7 +266,7 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
         console.log("getting info");
         store.getToken(username, function(error, token) {
           if(!error){
-            rtm.sendMessage('Got token' + token , message.channel, function messageSent() {
+            rtm.sendMessage('Got token: ' + token , message.channel, function messageSent() {
               console.log("Got token");
             });
           } else {
@@ -239,6 +275,29 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
             }); 
           } 
         });
+
+        dovico.getUserId(username, function(error, userId) {
+          if(!error){
+            rtm.sendMessage('User ID: ' + userId, message.channel, function messageSent() {
+              console.log("Got user ID");
+            });
+          } else {
+            rtm.sendMessage('Error getting userId', message.channel, function messageSent() {
+              console.log("Error getting userId", err);
+            }); 
+          } 
+        });
+
+        //dovico.getUserId(username).then(function(userId) {
+            //rtm.sendMessage('Got userId: ' + userId, message.channel, function messageSent() {
+              //console.log("Got userId");
+            //});
+        //}, function(error) {
+            //rtm.sendMessage('Error getting userId', message.channel, function messageSent() {
+              //console.log("Error getting userId", err);
+            //}); 
+          //} 
+        //);
       }
     }
   }
