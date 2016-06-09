@@ -18,6 +18,9 @@ rtm.on(RTM_EVENTS.HELLO, function (hello) {
 });
 
 
+var SETUP_COMMAND = "setup";
+var ENTER_COMMAND = "enter";
+
 
 rtm.on(RTM_EVENTS.MESSAGE, function (message) {
   // Listens to all `message` events from the team
@@ -68,7 +71,7 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 
       var userToken = messageTokens[1];
 
-      if(commandToken === "setup") {
+      if(commandToken === SETUP_COMMAND) {
         dovico.setupToken(username, userToken).then(
           function(result) {
             rtm.sendMessage('Token saved!', message.channel, function messageSent() {
@@ -80,15 +83,24 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
             });  
           }
         );
-      } else if(commandToken === "enter") {
+      } else if(commandToken === ENTER_COMMAND) {
+
+          if(messageTokens.length < 6) {
+            console.log(ENTER_COMMAND + ": Not enough data");
+            rtm.sendMessage('Not enough data!', message.channel);
+            return;
+          }
 
       } else if(commandToken === "project") {
-
-
-//        projectId;
+          // Command format:
+          // > project"
+          // Look up project ID
           dovico.getProjects(username).then(function(projects){
+
+            console.log(projects);
+
             rtm.sendMessage('projects listed!', message.channel, function messageSent() {
-              console.log("projects listed");
+              console.log("projects listed" + projects);
             });
           },
           function(error){
@@ -96,10 +108,51 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
               console.log("Error listing projects");
             });
           });
-  //      taskId;
-    //    date;
-      //  hours;
-        //description;
+      } else if(commandToken === "enter") {
+          // Command format:
+          // > enter Hackathon Development 2016-06-08 8 "Worked on slackico"
+          // Look up project ID
+          dovico.getProjects(username).then(function(projects){
+
+            console.log(projects);
+
+            rtm.sendMessage('projects listed!', message.channel, function messageSent() {
+              console.log("projects listed");
+            });
+
+            var projectName = messageTokens[1].toLowerCase();
+
+            projects.Assignments.forEach(function(assignment) {
+
+              var assignmentName = assignment.Name.toLowerCase();
+
+              if(assignmentName === projectName) {
+
+                var projectCode = assignment.ProjectID;
+                var projectID = assingment.ItemID;
+
+                dovico.getTasks(projectID).then(function(tasks) {
+
+                  var taskName = messageTokens[2].toLowerCase();
+                });
+              }
+            });
+          },
+          function(error){
+           rtm.sendMessage('Error listing projects', message.channel, function messageSent() {
+              console.log("Error listing projects");
+            });
+          });
+
+          // Look up task ID
+
+
+          // date;
+      
+          // hours;
+        
+
+          // description;
 
 
       } else if(commandToken === "info") {
