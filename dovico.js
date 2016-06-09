@@ -58,7 +58,30 @@ var enterTime = function(username, projectId, taskId, date, hours, description, 
 
 }
 
-var submitTime = function() {
+var submitTime = function(username, startDate, endDate, callback) {
+
+  getUserId(username, function(err, userId) {
+
+	  var formData = {
+	    "daterange": startDate + '%20' + endDate,
+	  }
+
+
+  	if(err) {
+    	callback(err, null);
+  	} else {
+
+	  requestPost(username, 'https://api.dovico.com/TimeEntries/Employee/' + userId + '/Submit/?version=5', formData).then(function(res) {
+		    callback(null, res);
+		  }, function(error) {
+		    callback(error, null);
+		  }
+		);
+
+
+  	}
+
+  });
 
 
 }
@@ -159,4 +182,5 @@ module.exports = {
 	'getTasks' : getTasks,
 	'getUserId' : getUserId,
   'enterTime' : enterTime,
+  'submitTime' : submitTime,
 };
