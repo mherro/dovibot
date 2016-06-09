@@ -1,9 +1,9 @@
 var RtmClient = require('@slack/client').RtmClient;
 var MemoryDataStore = require('@slack/client').MemoryDataStore;
 
-// var token = process.env.SLACK_API_TOKEN || '';
+var token = process.env.SLACK_API_TOKEN || '';
 
-var token = 'GET TOKEN FROM ENV VARIABLE';
+//var token = 'GET TOKEN FROM ENV VARIABLE';
 
 var rtm = new RtmClient(token, {logLevel: 'debug', dataStore: new MemoryDataStore({}) });
 
