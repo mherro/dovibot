@@ -88,13 +88,15 @@ var submitTime = function(username, startDate, endDate, callback) {
 
 var viewTime = function(username, startDate, endDate) {
 	return new Promise(function(resolve, reject) {
-		requestGet(username,'https://api.dovico.com/TimeEntries/?version=5&daterange=2016-06-05%202016-06-11').then(function(result){
+		var url = 'https://api.dovico.com/TimeEntries/?version=5&daterange=' + startDate + '%20' + endDate;
+		console.log('viewing time for :', url);
+		requestGet(username,url).then(function(result){
 			var text = "";
 
 			result.TimeEntries.forEach(function(entry) {
-				text += entry.Date + ":" +  entry.Project.Name + " - " +  entry.Task.Name + "=" + entry.TotalHours + "\n\r";
+				text += entry.Date + " - " +  entry.Project.Name + " - " 
+					+ entry.Task.Name + " " + entry.TotalHours + "\n\r";
 			});
-
 
 			resolve(text);
 		},
