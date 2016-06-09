@@ -25,10 +25,22 @@ var getUserId = function(username, callback) {
   }
 )};
 
-var enterTime = function() {
+var enterTime = function(username, projectId, taskId, date, hours, description, callback) {
+  var formData = {
+    "ProjectID": projectId,
+    "TaskID": taskId,
+    "EmployeeID": getUserId,
+    "Date": date,
+    "TotalHours": hours,
+    "Description": description
+  }
 
-
-}
+  requestPost(username, 'https://api.dovico.com/TimeEntries/?version=5', formData).then(function(res) {
+    callback(null, res);
+  }, function(error) {
+    callback(error, null);
+  }
+)};
 
 var submitTime = function() {
 
@@ -80,10 +92,51 @@ var requestGet = function(username,url) {
 }
 
 
+var requestPost = function(username, url, formData) {
+	return new Promise(function(resolve, reject){
+		store.getToken(username, function(err, token){
+			if(err){
+				console.log('error getting token', err);
+
+				reject(err);
+			}
+
+			console.log('got user token for username: ' + username);
+
+			var options = {
+			  url: url,
+			  headers: {
+			    'Authorization' : 'WRAP access_token=\"client=' + clientid + '&user_token=' + token + '\"',
+			    'Accept' :'application/json'
+			  },
+        formData: formData
+			};
+
+			console.log('post.options',options);
+
+			request.post(options, function(error, response, body) {
+				if (!error && response.statusCode == 200) {
+					var info = JSON.parse(body);
+
+					console.log("Upload successful! request response: ", body);
+
+					resolve(info);
+				} else {
+					console.log('request error: ', error, response.statusCode);
+
+					reject(error);
+				}
+			});
+		});
+	});
+}
+
+
 
 module.exports = {
 	'setupToken' : setupToken,
 	'getProjects' : getProjects,
 	'getTasks' : getTasks,
 	'getUserId' : getUserId,
+  'enterTime' : enterTime,
 };
