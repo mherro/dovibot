@@ -10,6 +10,13 @@ var rtm = new RtmClient(token, {logLevel: 'debug', dataStore: new MemoryDataStor
 
 var RTM_EVENTS = require('@slack/client').RTM_EVENTS;
 
+var redis = require('redis');
+var client = redis.createClient();
+
+client.on('connect', function() {
+    console.log('redis connected');
+});
+
 rtm.on(RTM_EVENTS.HELLO, function (hello) {
 
 	console.log("HELLO!");
