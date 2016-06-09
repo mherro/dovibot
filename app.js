@@ -255,7 +255,7 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
         console.log("getting info");
         store.getToken(username, function(error, token) {
           if(!error){
-            rtm.sendMessage('Got token' + token , message.channel, function messageSent() {
+            rtm.sendMessage('Got token: ' + token , message.channel, function messageSent() {
               console.log("Got token");
             });
           } else {
@@ -264,6 +264,29 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
             }); 
           } 
         });
+
+        dovico.getUserId(username, function(error, userId) {
+          if(!error){
+            rtm.sendMessage('User ID: ' + userId, message.channel, function messageSent() {
+              console.log("Got user ID");
+            });
+          } else {
+            rtm.sendMessage('Error getting userId', message.channel, function messageSent() {
+              console.log("Error getting userId", err);
+            }); 
+          } 
+        });
+
+        //dovico.getUserId(username).then(function(userId) {
+            //rtm.sendMessage('Got userId: ' + userId, message.channel, function messageSent() {
+              //console.log("Got userId");
+            //});
+        //}, function(error) {
+            //rtm.sendMessage('Error getting userId', message.channel, function messageSent() {
+              //console.log("Error getting userId", err);
+            //}); 
+          //} 
+        //);
       }
     }
   }
