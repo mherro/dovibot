@@ -10,7 +10,8 @@
     "request": "^2.72.0"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "watch": "node ./node_modules/nodemon/bin/nodemon.js -L app.js"
   },
   "repository": {
     "type": "git",

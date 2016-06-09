@@ -7,7 +7,6 @@ client.on('connect', function() {
     console.log('redis connected');
 });
 
-
 module.exports = {
 	hasToken: function(userId, callback){
 		client.exists(userId, function(err, reply) {
