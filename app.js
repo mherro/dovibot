@@ -213,12 +213,19 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
                     rtm.sendMessage('Task ' + userTaskName + ' not found', message.channel);  
                   } else {
 
-                    // TODO: fill out paremeters
-                    dovico.enterTime();
+                    dovico.enterTime(username, projectId, taskId, userDate, userHours, userDescription, function(err, res) {
 
+                      if(err){
+                        console.log('Error getting token', err);
+                        rtm.sendMessage('Error saving time!', message.channel);  
+                      } else {
+                        console.log('Successfully entered time');
+                        rtm.sendMessage('Time successfully saved!', message.channel);  
+                      }
+
+                    });
 
                   }
-
 
                 });
             }
@@ -228,10 +235,10 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 
 
       } else if(commandToken === VIEW_COMMAND) {
+
         var startDate = '';
         var endDate = '';
         dovico.viewTime(username, startDate, endDate).then(function(time){
-           
             rtm.sendMessage('Time for ' + startDate + ' to ' + endDate + '\n' + time, message.channel, function messageSent() {
               console.log("view time" , time);
             });
@@ -240,10 +247,8 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
            rtm.sendMessage('Error listing time', message.channel, function messageSent() {
               console.log("Error listing time", error );
             });
-          });
-
-
-
+          }
+        );
       } else if(commandToken === TASKS_COMMAND) {
           // Command format:
           // > tasks"
