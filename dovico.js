@@ -142,6 +142,9 @@ var requestPost = function(username, url, formData) {
 
 			console.log('got user token for username: ' + username);
 
+
+			var requestBody = "[" + JSON.stringify(formData) + "]"; 
+
 			var options = {
 			  url: url,
 			  headers: {
@@ -149,7 +152,7 @@ var requestPost = function(username, url, formData) {
 			    'Accept' : 'application/json',
 			    'Content-Type' : 'application/json'
 			  },
-        		formData: formData
+        		body: requestBody
 			};
 
 			console.log('post.options',options);
