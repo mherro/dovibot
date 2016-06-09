@@ -59,14 +59,35 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 //  });
 
   if(channelGroupOrDM.is_im === true) {
-    rtm.sendMessage('Hello, how are you?', message.channel, function messageSent() {
-      console.log('NICE DM SENT');
-	});
+    
+    //rtm.sendMessage('Hello, how are you?', message.channel, function messageSent() {
+    //  console.log('NICE DM SENT');
+
+    var messageTokens = message.text.split(/[ ]+/);
+
+    if(messageTokens.length > 1) {
+
+      var userToken = messageTokens[1];
+
+      if(messageTokens[0] === "setup") {
+        dovico.setupToken(username, userToken, function(err) {
+
+          if(err) {
+            // error message
+            rtm.sendMessage('Error occurred saving token', message.channel, function messageSent() {
+              console.log("Error message sent");
+            });
+          } else {
+            // success message
+            rtm.sendMessage('Token saved!', message.channel, function messageSent() {
+              console.log("Token saved message sent");
+            });
+          }
+        });
+      }
+    }
   }
-
-
 });
-
 
 
 rtm.start();
