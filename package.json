@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "dovico slack bot integration",
   "main": "app.js",
+  "dependencies": {
+    "@slack/client" : "3.1.0"
+  },
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp test",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
