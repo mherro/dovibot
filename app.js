@@ -22,6 +22,7 @@ rtm.on(RTM_EVENTS.HELLO, function (hello) {
 
 var SETUP_COMMAND = "setup";
 var ENTER_COMMAND = "enter";
+var VIEW_COMMAND = "view";
 var PROJECT_COMMAND = "project";
 var TASKS_COMMAND = "tasks";
 var INFO_COMMAND = "info";
@@ -207,6 +208,16 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 
                   console.log("Task ID: " + taskId);
 
+                  if(taskId == 0) {
+                    console.log('Task ' + userTaskName + ' not found');
+                    rtm.sendMessage('Task ' + userTaskName + ' not found', message.channel);  
+                  } else {
+
+                    // TODO: fill out paremeters
+                    dovico.enterTime();
+
+
+                  }
 
 
                 });
@@ -214,6 +225,11 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 
 
           });
+
+
+      } else if(commandToken === VIEW_COMMAND) {
+
+        dovico.viewTime(username, startDate, endDate).then(function)
 
 
 
