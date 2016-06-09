@@ -95,11 +95,21 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
       } else if(commandToken === "enter") {
 
 
-        projectId;
-        taskId;
-        date;
-        hours;
-        description;
+//        projectId;
+          dovico.getProjects(username).then(function(projects){
+            rtm.sendMessage('projects listed!', message.channel, function messageSent() {
+              console.log("projects listed");
+            });
+          },
+          function(error){
+           rtm.sendMessage('Error listing projects', message.channel, function messageSent() {
+              console.log("Error listing projects");
+            });
+          });
+  //      taskId;
+    //    date;
+      //  hours;
+        //description;
 
 
       }
