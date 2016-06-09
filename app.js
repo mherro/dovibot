@@ -94,148 +94,6 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
           }
         );
       
-      } else if(commandToken === PROJECT_COMMAND) {
-          // Command format:
-          // > project"
-          // Look up project ID
-          dovico.getProjects(username).then(function(projects){
-
-            console.log(projects);
-
-            rtm.sendMessage('projects listed!', message.channel, function messageSent() {
-              console.log("projects listed" + projects);
-            });
-          },
-          function(error){
-           rtm.sendMessage('Error listing projects', message.channel, function messageSent() {
-              console.log("Error listing projects");
-            });
-          });
-
-      } else if(commandToken === ENTER_COMMAND) {
-          // Command format:
-          // > enter Hackathon Development 2016-06-08 8 "Worked on slackico"
-
-          if(messageTokens.length < 6) {
-            console.log(ENTER_COMMAND + ": Not enough data");
-            rtm.sendMessage('Error! Command format: ' + ENTER_COMMAND + ' Hackathon Development 2016-06-08 8 "Worked on slackico"', message.channel);
-            return;
-          }
-
-          var userProjectName = messageTokens[1].toLowerCase();
-          var userTaskName = messageTokens[2].toLowerCase();
-          var userDate = messageTokens[3];
-          var userHours = messageTokens[4];
-          var userDescription = '';
-
-
-          var projectId = 0;
-          var taskId = 0;
-
-          // validate date
-          var dateValid = moment(userDate, "YYYY-MM-DD").isValid();
-
-          if(dateValid === false) {
-            console.log(ENTER_COMMAND + ": Invalid date " + userDate + ", must be YYYY-MM-DD");
-            rtm.sendMessage('Error! Date must be in format YYYY-MM-DD', message.channel);
-          }
-
-
-          // validate hours
-          var userHoursFloat = parseFloat(userHours);
-
-          if(isNaN(userHoursFloat)) {
-            console.log(ENTER_COMMAND + ": Invalid hours " + userHours);
-            rtm.sendMessage('Error! Hours must be a decimal: ' + userHours, message.channel);
-            return;
-           
-          }
-
-
-          for(var i = 5; i < messageTokens.length; i++) {
-            userDescription += messageTokens[i] + ' ';
-          }
-
-          // validate description
-          if(userDescription.length === 0) {
-            console.log(ENTER_COMMAND + ": Description is required ");
-            rtm.sendMessage('Error! Description is required', message.channel);
-            return;
-          }
-
-
-          // Look up project ID
-          dovico.getProjects(username).then(function(projects){
-
-            console.log(projects);
-
-            rtm.sendMessage('projects listed!', message.channel, function messageSent() {
-              console.log("projects listed");
-            });
-
-
-            projects.Assignments.forEach(function(assignment) {
-
-              var projectName = assignment.Name.toLowerCase();
-              console.log('projectName: ' + projectName + ', userProjectName: ' + userProjectName);
-
-              if(projectName === userProjectName) {
-                  console.log('Found it! ' + assignment.ItemID)
-                  projectId = assignment.ItemID;
-              }
-
-            });
-
-
-            if(projectId === 0) {
-              console.log('Project ' + userProjectName + ' not found');
-              rtm.sendMessage('Project ' + userProjectName + ' not found', message.channel);
-            } else {
-
-                console.log('Getting tasks for project ' + projectId)
-
-                dovico.getTasks(username, projectId).then(function(tasks){
-
-                  console.log(tasks);
-
-                  tasks.Assignments.forEach(function(task) {
-
-                    var taskName = task.Name.toLowerCase();
-
-                    if(taskName === userTaskName) {
-                      console.log("Found task: " + taskName)
-                      taskId = task.ItemID;
-
-                    }
-
-                  });
-
-                  console.log("Task ID: " + taskId);
-
-                  if(taskId == 0) {
-                    console.log('Task ' + userTaskName + ' not found');
-                    rtm.sendMessage('Task ' + userTaskName + ' not found', message.channel);  
-                  } else {
-
-                    dovico.enterTime(username, projectId, taskId, userDate, userHours, userDescription, function(err, res) {
-
-                      if(err){
-                        console.log('Error getting token', err);
-                        rtm.sendMessage('Error saving time!', message.channel);  
-                      } else {
-                        console.log('Successfully entered time');
-                        rtm.sendMessage('Time successfully saved! :smile:', message.channel);  
-                      }
-
-                    });
-
-                  }
-
-                });
-            }
-
-
-          });
       } else if(commandToken === HELP_COMMAND) {
         var fs = require('fs'),
           path = require('path');
@@ -248,88 +106,249 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
           });
         });
 
-      } else if(commandToken === VIEW_COMMAND) {
-        var startDate,endDate;
-        if(messageTokens[1] === "today"){ 
-          endDate = startDate = utilities.today();
-        } else {
-          startDate = utilities.startOfWeek();
-          endDate = utilities.endOfWeek();
-        }  
-        dovico.viewTime(username, startDate, endDate).then(function(time){
-            rtm.sendMessage('Time for ' + startDate + ' to ' + endDate + '\n' + time, message.channel, function messageSent() {
-              console.log("view time" , time);
-            });
-          },
-          function(error){
-           rtm.sendMessage('Error listing time', message.channel, function messageSent() {
-              console.log("Error listing time", error );
-            });
-          }
-        );
-      } else if(commandToken === TASKS_COMMAND) {
-          // Command format:
-          // > tasks"
-          // Look up all tasks for a given user
+      }
 
- 	        var projectId = messageTokens[1];
+      var allElse = function(){
+        if(commandToken === PROJECT_COMMAND) {
+            // Command format:
+            // > project"
+            // Look up project ID
+            dovico.getProjects(username).then(function(projects){
 
-          dovico.getTasks(username, projectId).then(function(tasks){
-         
-            rtm.sendMessage('tasks listed!', message.channel, function messageSent() {
-              console.log("tasks listed" + tasks);
+              console.log(projects);
+
+              rtm.sendMessage('projects listed!', message.channel, function messageSent() {
+                console.log("projects listed" + projects);
+              });
+            },
+            function(error){
+             rtm.sendMessage('Error listing projects', message.channel, function messageSent() {
+                console.log("Error listing projects");
+              });
             });
-          },
-          function(error){
-           rtm.sendMessage('Error listing tasks', message.channel, function messageSent() {
-              console.log("Error listing tasks");
+
+        } else if(commandToken === ENTER_COMMAND) {
+            // Command format:
+            // > enter Hackathon Development 2016-06-08 8 "Worked on slackico"
+
+            if(messageTokens.length < 6) {
+              console.log(ENTER_COMMAND + ": Not enough data");
+              rtm.sendMessage('Error! Command format: ' + ENTER_COMMAND + ' Hackathon Development 2016-06-08 8 "Worked on slackico"', message.channel);
+              return;
+            }
+
+            var userProjectName = messageTokens[1].toLowerCase();
+            var userTaskName = messageTokens[2].toLowerCase();
+            var userDate = messageTokens[3];
+            var userHours = messageTokens[4];
+            var userDescription = '';
+
+
+            var projectId = 0;
+            var taskId = 0;
+
+            // validate date
+            var dateValid = moment(userDate, "YYYY-MM-DD").isValid();
+
+            if(dateValid === false) {
+              console.log(ENTER_COMMAND + ": Invalid date " + userDate + ", must be YYYY-MM-DD");
+              rtm.sendMessage('Error! Date must be in format YYYY-MM-DD', message.channel);
+            }
+
+
+            // validate hours
+            var userHoursFloat = parseFloat(userHours);
+
+            if(isNaN(userHoursFloat)) {
+              console.log(ENTER_COMMAND + ": Invalid hours " + userHours);
+              rtm.sendMessage('Error! Hours must be a decimal: ' + userHours, message.channel);
+              return;
+             
+            }
+
+
+            for(var i = 5; i < messageTokens.length; i++) {
+              userDescription += messageTokens[i] + ' ';
+            }
+
+            // validate description
+            if(userDescription.length === 0) {
+              console.log(ENTER_COMMAND + ": Description is required ");
+              rtm.sendMessage('Error! Description is required', message.channel);
+              return;
+            }
+
+
+            // Look up project ID
+            dovico.getProjects(username).then(function(projects){
+
+              console.log(projects);
+
+              rtm.sendMessage('projects listed!', message.channel, function messageSent() {
+                console.log("projects listed");
+              });
+
+
+              projects.Assignments.forEach(function(assignment) {
+
+                var projectName = assignment.Name.toLowerCase();
+                console.log('projectName: ' + projectName + ', userProjectName: ' + userProjectName);
+
+                if(projectName === userProjectName) {
+                    console.log('Found it! ' + assignment.ItemID)
+                    projectId = assignment.ItemID;
+                }
+
+              });
+
+
+              if(projectId === 0) {
+                console.log('Project ' + userProjectName + ' not found');
+                rtm.sendMessage('Project ' + userProjectName + ' not found', message.channel);
+              } else {
+
+                  console.log('Getting tasks for project ' + projectId)
+
+                  dovico.getTasks(username, projectId).then(function(tasks){
+
+                    console.log(tasks);
+
+                    tasks.Assignments.forEach(function(task) {
+
+                      var taskName = task.Name.toLowerCase();
+
+                      if(taskName === userTaskName) {
+                        console.log("Found task: " + taskName)
+                        taskId = task.ItemID;
+
+                      }
+
+                    });
+
+                    console.log("Task ID: " + taskId);
+
+                    if(taskId == 0) {
+                      console.log('Task ' + userTaskName + ' not found');
+                      rtm.sendMessage('Task ' + userTaskName + ' not found', message.channel);  
+                    } else {
+
+                      dovico.enterTime(username, projectId, taskId, userDate, userHours, userDescription, function(err, res) {
+
+                        if(err){
+                          console.log('Error getting token', err);
+                          rtm.sendMessage('Error saving time!', message.channel);  
+                        } else {
+                          console.log('Successfully entered time');
+                          rtm.sendMessage('Time successfully saved! :smile:', message.channel);  
+                        }
+
+                      });
+
+                    }
+
+                  });
+              }
+
+
             });
+        }  else if(commandToken === VIEW_COMMAND) {
+          var startDate,endDate;
+          if(messageTokens[1] === "today"){ 
+            endDate = startDate = utilities.today();
+          } else {
+            startDate = utilities.startOfWeek();
+            endDate = utilities.endOfWeek();
+          }  
+          dovico.viewTime(username, startDate, endDate).then(function(time){
+              rtm.sendMessage('Time for ' + startDate + ' to ' + endDate + '\n' + time, message.channel, function messageSent() {
+                console.log("view time" , time);
+              });
+            },
+            function(error){
+             rtm.sendMessage('Error listing time', message.channel, function messageSent() {
+                console.log("Error listing time", error );
+              });
+            }
+          );
+        } else if(commandToken === TASKS_COMMAND) {
+            // Command format:
+            // > tasks"
+            // Look up all tasks for a given user
+
+            var projectId = messageTokens[1];
+
+            dovico.getTasks(username, projectId).then(function(tasks){
+           
+              rtm.sendMessage('tasks listed!', message.channel, function messageSent() {
+                console.log("tasks listed" + tasks);
+              });
+            },
+            function(error){
+             rtm.sendMessage('Error listing tasks', message.channel, function messageSent() {
+                console.log("Error listing tasks");
+              });
+            });
+
+        } else if(commandToken === SUBMIT_COMMAND) {
+
+          var startDate = utilities.startOfWeek();
+          var endDate = utilities.endOfWeek();
+
+          dovico.submitTime(username, startDate, endDate, function(error, result) {
+            if(error) {
+              console.log("Error!", error);
+              rtm.sendMessage('Error submitting time: ' + error, message.channel);
+            } else {
+              rtm.sendMessage('Time Submitted!', message.channel);
+            }
+
+
           });
 
-      } else if(commandToken === SUBMIT_COMMAND) {
-
-        var startDate = utilities.startOfWeek();
-        var endDate = utilities.endOfWeek();
-
-        dovico.submitTime(username, startDate, endDate, function(error, result) {
-          if(error) {
-            console.log("Error!", error);
-            rtm.sendMessage('Error submitting time: ' + error, message.channel);
-          } else {
-            rtm.sendMessage('Time Submitted!', message.channel);
-          }
 
 
-        });
+        } else if(commandToken === INFO_COMMAND) {
+          console.log("getting info");
+          store.getToken(username, function(error, token) {
+            if(!error){
+              rtm.sendMessage('Got token: ' + token , message.channel, function messageSent() {
+                console.log("Got token");
+              });
+            } else {
+              rtm.sendMessage('Error getting token', message.channel, function messageSent() {
+                console.log("Error getting token", err);
+              }); 
+            } 
+          });
 
-
-
-      } else if(commandToken === INFO_COMMAND) {
-        console.log("getting info");
-        store.getToken(username, function(error, token) {
-          if(!error){
-            rtm.sendMessage('Got token: ' + token , message.channel, function messageSent() {
-              console.log("Got token");
-            });
-          } else {
-            rtm.sendMessage('Error getting token', message.channel, function messageSent() {
-              console.log("Error getting token", err);
-            }); 
-          } 
-        });
-
-        dovico.getUserId(username, function(error, userId) {
-          if(!error){
-            rtm.sendMessage('User ID: ' + userId, message.channel, function messageSent() {
-              console.log("Got user ID");
-            });
-          } else {
-            rtm.sendMessage('Error getting userId', message.channel, function messageSent() {
-              console.log("Error getting userId", err);
-            }); 
-          } 
-        });
+          dovico.getUserId(username, function(error, userId) {
+            if(!error){
+              rtm.sendMessage('User ID: ' + userId, message.channel, function messageSent() {
+                console.log("Got user ID");
+              });
+            } else {
+              rtm.sendMessage('Error getting userId', message.channel, function messageSent() {
+                console.log("Error getting userId", err);
+              }); 
+            } 
+          });
+        }
       }
+
+      //the rest of the command require a token, so check if the user has a token yet
+      store.getToken(username, function(error, token) {
+          if(!error && token){
+            console.log('all else', token);
+           allElse(rtm, message);
+
+          } else {
+            rtm.sendMessage('Error getting token. Please use help on how to enable your token.', message.channel, function messageSent() {
+              console.log("Error getting token", error);
+            }); 
+          } 
+      });
+
+
     }
   }
 });
