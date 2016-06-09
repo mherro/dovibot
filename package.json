@@ -4,7 +4,8 @@
   "description": "dovico slack bot integration",
   "main": "app.js",
   "dependencies": {
-    "@slack/client" : "3.1.0",
+    "@slack/client": "3.1.0",
+    "bluebird": "^3.4.0",
     "redis": "^2.6.1"
   },
   "scripts": {

@@ -37,7 +37,16 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
   
   console.log('My ID: ' + rtm.activeUserId);
   console.log('From ID: ' + message.user);
+  
+  if(message.subtype === "message_changed") {
+    console.log("Ignoring message edit");
+    return;
+  }
 
+  if(message.user === null) {
+    console.log("Message user not specified");
+    return;
+  }
 
 //  console.log('RTM:' + JSON.stringify(rtm, censor(rtm)));
 
@@ -67,23 +76,32 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 
     if(messageTokens.length > 1) {
 
+      var commandToken = messageTokens[0].toLowerCase();
+
       var userToken = messageTokens[1];
 
-      if(messageTokens[0] === "setup") {
-        dovico.setupToken(username, userToken, function(err) {
-
-          if(err) {
-            // error message
-            rtm.sendMessage('Error occurred saving token', message.channel, function messageSent() {
-              console.log("Error message sent");
-            });
-          } else {
-            // success message
+      if(commandToken === "setup") {
+        dovico.setupToken(username, userToken).then(
+          function(result) {
             rtm.sendMessage('Token saved!', message.channel, function messageSent() {
               console.log("Token saved message sent");
             });
+          }, function(err) {
+            rtm.sendMessage('Error occurred saving token', message.channel, function messageSent() {
+              console.log("Error message sent");
+            });  
           }
-        });
+        );
+      } else if(commandToken === "enter") {
+
+
+        projectId;
+        taskId;
+        date;
+        hours;
+        description;
+
+
       }
     }
   }
