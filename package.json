@@ -1,0 +1,19 @@
+{
+  "name": "dovibot",
+  "version": "1.0.0",
+  "description": "dovico slack bot integration",
+  "main": "app.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cweilemann/dovibot.git"
+  },
+  "author": "hs2 solutions",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cweilemann/dovibot/issues"
+  },
+  "homepage": "https://github.com/cweilemann/dovibot#readme"
+}
