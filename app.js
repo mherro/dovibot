@@ -12,21 +12,9 @@ var RTM_EVENTS = require('@slack/client').RTM_EVENTS;
 
 
 var dovico = require('./dovico');
-
-var redis = require('redis');
-var client = redis.createClient();
-
-client.on('connect', function() {
-    console.log('redis connected');
-});
-
+var store = require('./store');
 rtm.on(RTM_EVENTS.HELLO, function (hello) {
-
 	console.log("HELLO!");
-
-	// console.log('ID: ' + rtm.ID);
-	// console.log('Team: ' + rtm.team);
-
 });
 
 
@@ -74,7 +62,7 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 
     var messageTokens = message.text.split(/[ ]+/);
 
-    if(messageTokens.length > 1) {
+    if(messageTokens.length > 0) {
 
       var commandToken = messageTokens[0].toLowerCase();
 
@@ -88,11 +76,13 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
             });
           }, function(err) {
             rtm.sendMessage('Error occurred saving token', message.channel, function messageSent() {
-              console.log("Error message sent");
+              console.log("Error message sent", err);
             });  
           }
         );
       } else if(commandToken === "enter") {
+
+      } else if(commandToken === "project") {
 
 
 //        projectId;
@@ -112,6 +102,19 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
         //description;
 
 
+      } else if(commandToken === "info") {
+        console.log("getting info");
+        store.getToken(username, function(error, token) {
+          if(!error){
+            rtm.sendMessage('Got token' + token , message.channel, function messageSent() {
+              console.log("Got token");
+            });
+          } else {
+            rtm.sendMessage('Error getting token', message.channel, function messageSent() {
+              console.log("Error getting token", err);
+            }); 
+          } 
+        });
       }
     }
   }

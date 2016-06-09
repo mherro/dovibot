@@ -5,7 +5,7 @@ var Promise = require('bluebird');
 var request = require('request');
 
 
-var setupToken = function(){ 
+var setupToken = function(username, token){ 
 	return new Promise(function(resolve, reject) {
 		store.saveToken(username, token, function(error,data){
 			if(error) {
@@ -31,7 +31,14 @@ var viewTime = function() {
 
 }
 
+
 var getProjects = function(username) {
+	return requestGet(username,'https://api.dovico.com/Assignments/?version=5');
+}
+var clientid = process.env.DOVICO_CLIENT_ID;
+
+
+var requestGet = function(username,url) {
 	return new Promise(function(resolve, reject){
 		store.getToken(username, function(err, token){
 			if(err){
@@ -40,14 +47,13 @@ var getProjects = function(username) {
 			}
 			console.log('got user token for username:' + username);
 			var options = {
-			  url: 'https://api.dovico.com/Assignments/?version=5',
+			  url: url,
 			  headers: {
-			    'Authorization' : 'WRAP access_token=\"client=47a048bbaa884c56a7feef9483c171e3.29671&user_token=95a8175ed6d941dab8f21c887a7d8102.29671\"',
-
-			    //"'WRAP access_token' :'client=47a048bbaa884c56a7feef9483c171e3.29671&user_token='" + token + "'",
+			    'Authorization' : 'WRAP access_token=\"client=' + clientid + '&user_token=' + token + '\"',
 			    'Accept' :'application/json'
 			  }
 			};
+			console.log('get.options',options);
 			request.get(options, function(error, response, body) {
 				if (!error && response.statusCode == 200) {
 					var info = JSON.parse(body);
@@ -60,7 +66,6 @@ var getProjects = function(username) {
 			});
 		});
 	});
-
 }
 
 
