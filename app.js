@@ -10,6 +10,9 @@ var rtm = new RtmClient(token, {logLevel: 'debug', dataStore: new MemoryDataStor
 
 var RTM_EVENTS = require('@slack/client').RTM_EVENTS;
 
+
+var dovico = require('./dovico');
+
 var redis = require('redis');
 var client = redis.createClient();
 
