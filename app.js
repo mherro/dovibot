@@ -2,6 +2,7 @@ var RtmClient = require('@slack/client').RtmClient;
 var MemoryDataStore = require('@slack/client').MemoryDataStore;
 
 var moment = require('moment');
+var utilities = require('./utilities');
 
 var token = process.env.SLACK_API_TOKEN || '';
 
@@ -235,9 +236,13 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 
 
       } else if(commandToken === VIEW_COMMAND) {
-
-        var startDate = '';
-        var endDate = '';
+        var startDate,endDate;
+        if(messageTokens[1] === "today"){ 
+          endDate = startDate = utilities.today();
+        } else {
+          startDate = utilities.startOfWeek();
+          endDate = utilities.endOfWeek();
+        }  
         dovico.viewTime(username, startDate, endDate).then(function(time){
             rtm.sendMessage('Time for ' + startDate + ' to ' + endDate + '\n' + time, message.channel, function messageSent() {
               console.log("view time" , time);
