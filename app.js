@@ -108,53 +108,26 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
               console.log("Error listing projects");
             });
           });
-      } else if(commandToken === "enter") {
+      } else if(commandToken === "tasks") {
           // Command format:
-          // > enter Hackathon Development 2016-06-08 8 "Worked on slackico"
-          // Look up project ID
-          dovico.getProjects(username).then(function(projects){
+          // > tasks"
+          // Look up all tasks for a given user
 
-            console.log(projects);
+ 	  var projectId = messageTokens[1];
 
-            rtm.sendMessage('projects listed!', message.channel, function messageSent() {
-              console.log("projects listed");
-            });
+          dovico.getTasks(username, projectId).then(function(tasks){
 
-            var projectName = messageTokens[1].toLowerCase();
+            console.log(tasks);
 
-            projects.Assignments.forEach(function(assignment) {
-
-              var assignmentName = assignment.Name.toLowerCase();
-
-              if(assignmentName === projectName) {
-
-                var projectCode = assignment.ProjectID;
-                var projectID = assingment.ItemID;
-
-                dovico.getTasks(projectID).then(function(tasks) {
-
-                  var taskName = messageTokens[2].toLowerCase();
-                });
-              }
+            rtm.sendMessage('tasks listed!', message.channel, function messageSent() {
+              console.log("tasks listed" + tasks);
             });
           },
           function(error){
-           rtm.sendMessage('Error listing projects', message.channel, function messageSent() {
-              console.log("Error listing projects");
+           rtm.sendMessage('Error listing tasks', message.channel, function messageSent() {
+              console.log("Error listing tasks");
             });
           });
-
-          // Look up task ID
-
-
-          // date;
-      
-          // hours;
-        
-
-          // description;
-
-
       } else if(commandToken === "info") {
         console.log("getting info");
         store.getToken(username, function(error, token) {
