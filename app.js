@@ -24,6 +24,7 @@ rtm.on(RTM_EVENTS.HELLO, function (hello) {
 var SETUP_COMMAND = "setup";
 var ENTER_COMMAND = "enter";
 var VIEW_COMMAND = "view";
+var SUBMIT_COMMAND = "submit";
 var PROJECT_COMMAND = "project";
 var TASKS_COMMAND = "tasks";
 var INFO_COMMAND = "info";
@@ -222,7 +223,7 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
                         rtm.sendMessage('Error saving time!', message.channel);  
                       } else {
                         console.log('Successfully entered time');
-                        rtm.sendMessage('Time successfully saved!', message.channel);  
+                        rtm.sendMessage('Time successfully saved! :smile:', message.channel);  
                       }
 
                     });
@@ -283,6 +284,25 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
               console.log("Error listing tasks");
             });
           });
+
+      } else if(commandToken === SUBMIT_COMMAND) {
+
+        var startDate = utilities.startOfWeek();
+        var endDate = utilities.endOfWeek();
+
+        dovico.submitTime(username, startDate, endDate, function(error, result) {
+          if(error) {
+            console.log("Error!", error);
+            rtm.sendMessage('Error submitting time: ' + error, message.channel);
+          } else {
+            rtm.sendMessage('Time Submitted!', message.channel);
+          }
+
+
+        });
+
+
+
       } else if(commandToken === INFO_COMMAND) {
         console.log("getting info");
         store.getToken(username, function(error, token) {
