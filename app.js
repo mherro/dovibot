@@ -125,6 +125,9 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
           var projectId = 0;
           var taskId = 0;
 
+          // validate date
+
+          // validate hours
           var userHoursFloat = parseFloat(userHours);
 
           if(isNaN(userHoursFloat)) {
@@ -138,6 +141,14 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
           for(var i = 5; i < messageTokens.length; i++) {
             userDescription += messageTokens[i] + ' ';
           }
+
+          // validate description
+          if(userDescription.length === 0) {
+            console.log(ENTER_COMMAND + ": Description is required ");
+            rtm.sendMessage('Error! Description is required', message.channel);
+            return;
+          }
+
 
           // Look up project ID
           dovico.getProjects(username).then(function(projects){
@@ -171,11 +182,8 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 
                 dovico.getTasks(username, projectId).then(function(tasks){
 
-
                   console.log(tasks);
 
-
-                  // TODO: verify task json format
                   tasks.Assignments.forEach(function(task) {
 
                     var taskName = task.Name.toLowerCase();
