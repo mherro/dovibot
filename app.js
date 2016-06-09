@@ -20,6 +20,9 @@ rtm.on(RTM_EVENTS.HELLO, function (hello) {
 
 var SETUP_COMMAND = "setup";
 var ENTER_COMMAND = "enter";
+var PROJECT_COMMAND = "project";
+var TASKS_COMMAND = "tasks";
+var INFO_COMMAND = "info";
 
 
 rtm.on(RTM_EVENTS.MESSAGE, function (message) {
@@ -84,7 +87,7 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
           }
         );
       
-      } else if(commandToken === "project") {
+      } else if(commandToken === PROJECT_COMMAND) {
           // Command format:
           // > project"
           // Look up project ID
@@ -101,6 +104,7 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
               console.log("Error listing projects");
             });
           });
+
       } else if(commandToken === ENTER_COMMAND) {
           // Command format:
           // > enter Hackathon Development 2016-06-08 8 "Worked on slackico"
@@ -117,10 +121,23 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
           var userHours = messageTokens[4];
           var userDescription = '';
 
+
+          var projectId = 0;
+          var taskId = 0;
+
+          var userHoursFloat = parseFloat(userHours);
+
+          if(isNaN(userHoursFloat)) {
+            console.log(ENTER_COMMAND + ": Invalid hours " + userHours);
+            rtm.sendMessage('Error! Hours must be a decimal: ' + userHours, message.channel);
+            return;
+           
+          }
+
+
           for(var i = 5; i < messageTokens.length; i++) {
             userDescription += messageTokens[i] + ' ';
           }
-
 
           // Look up project ID
           dovico.getProjects(username).then(function(projects){
@@ -135,25 +152,37 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
             projects.Assignments.forEach(function(assignment) {
 
               var projectName = assignment.Name.toLowerCase();
+              console.log('projectName: ' + projectName + ', userProjectName: ' + userProjectName);
 
               if(projectName === userProjectName) {
+                  console.log('Found it! ' + assignment.ItemID)
+                  projectId = assignment.ItemID;
+              }
 
-                var projectCode = assignment.ProjectID;
-                var projectID = assingment.ItemID;
+            });
 
-                dovico.getTasks(projectID).then(function(tasks) {
+
+            if(projectId === 0) {
+              console.log('Project ' + userProjectName + ' not found');
+              rtm.sendMessage('Project ' + userProjectName + ' not found', message.channel);
+            } else {
+
+                console.log('Getting tasks for project ' + projectId)
+
+                dovico.getTasks(username, projectId).then(function(tasks){
+
 
                   console.log(tasks);
 
 
                   // TODO: verify task json format
-                  tasks.forEach(function(task) {
+                  tasks.Assignments.forEach(function(task) {
 
                     var taskname = task.Name.toLowerCase();
 
                     if(taskName === userTaskName) {
 
-
+                      taskId = task.ItemID;
 
                     }
 
@@ -161,28 +190,35 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 
 
 
+
+
                 });
-              }
+            }
+
+
+          });
+
+
+
+      } else if(commandToken === TASKS_COMMAND) {
+          // Command format:
+          // > tasks"
+          // Look up all tasks for a given user
+
+ 	        var projectId = messageTokens[1];
+
+          dovico.getTasks(username, projectId).then(function(tasks){
+         
+            rtm.sendMessage('tasks listed!', message.channel, function messageSent() {
+              console.log("tasks listed" + tasks);
             });
           },
           function(error){
-           rtm.sendMessage('Error listing projects', message.channel, function messageSent() {
-              console.log("Error listing projects");
+           rtm.sendMessage('Error listing tasks', message.channel, function messageSent() {
+              console.log("Error listing tasks");
             });
           });
-
-          // Look up task ID
-
-
-          // date;
-      
-          // hours;
-        
-
-          // description;
-
-
-      } else if(commandToken === "info") {
+      } else if(commandToken === INFO_COMMAND) {
         console.log("getting info");
         store.getToken(username, function(error, token) {
           if(!error){
