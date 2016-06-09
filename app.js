@@ -28,6 +28,7 @@ var SUBMIT_COMMAND = "submit";
 var PROJECT_COMMAND = "project";
 var TASKS_COMMAND = "tasks";
 var INFO_COMMAND = "info";
+var HELP_COMMAND = "help";
 
 
 rtm.on(RTM_EVENTS.MESSAGE, function (message) {
@@ -234,7 +235,17 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 
 
           });
-
+      } else if(commandToken === HELP_COMMAND) {
+        var fs = require('fs'),
+          path = require('path');
+          var full = path.resolve(__dirname, 'help.txt');
+          console.log('full path', full);
+        fs.readFile(path.resolve(__dirname, 'help.txt'), 'utf-8', function(err, data)  {
+          if (err) throw err;
+          rtm.sendMessage(data, message.channel, function(){
+            console.log('help sent')
+          });
+        });
 
       } else if(commandToken === VIEW_COMMAND) {
         var startDate,endDate;
@@ -317,17 +328,6 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
             }); 
           } 
         });
-
-        //dovico.getUserId(username).then(function(userId) {
-            //rtm.sendMessage('Got userId: ' + userId, message.channel, function messageSent() {
-              //console.log("Got userId");
-            //});
-        //}, function(error) {
-            //rtm.sendMessage('Error getting userId', message.channel, function messageSent() {
-              //console.log("Error getting userId", err);
-            //}); 
-          //} 
-        //);
       }
     }
   }
