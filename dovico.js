@@ -42,7 +42,7 @@ var enterTime = function(username, projectId, taskId, date, hours, description, 
 	    "Date": date,
 	    "TotalHours": hours,
 	    "Description": description
-	  }
+	  };
 
 	  requestPost(username, 'https://api.dovico.com/TimeEntries/?version=5', formData).then(function(res) {
 		    callback(null, res);
@@ -123,9 +123,10 @@ var requestPost = function(username, url, formData) {
 			  url: url,
 			  headers: {
 			    'Authorization' : 'WRAP access_token=\"client=' + clientid + '&user_token=' + token + '\"',
-			    'Accept' :'application/json'
+			    'Accept' : 'application/json',
+			    'Content-Type' : 'application/json'
 			  },
-        formData: formData
+        		formData: formData
 			};
 
 			console.log('post.options',options);
