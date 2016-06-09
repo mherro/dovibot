@@ -83,14 +83,7 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
             });  
           }
         );
-      } else if(commandToken === ENTER_COMMAND) {
-
-          if(messageTokens.length < 6) {
-            console.log(ENTER_COMMAND + ": Not enough data");
-            rtm.sendMessage('Not enough data!', message.channel);
-            return;
-          }
-
+      
       } else if(commandToken === "project") {
           // Command format:
           // > project"
@@ -108,9 +101,27 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
               console.log("Error listing projects");
             });
           });
-      } else if(commandToken === "enter") {
+      } else if(commandToken === ENTER_COMMAND) {
           // Command format:
           // > enter Hackathon Development 2016-06-08 8 "Worked on slackico"
+
+          if(messageTokens.length < 6) {
+            console.log(ENTER_COMMAND + ": Not enough data");
+            rtm.sendMessage('Error! Command format: ' + ENTER_COMMAND + ' Hackathon Development 2016-06-08 8 "Worked on slackico"', message.channel);
+            return;
+          }
+
+          var userProjectName = messageTokens[1].toLowerCase();
+          var userTaskName = messageTokens[2].toLowerCase();
+          var userDate = messageTokens[3];
+          var userHours = messageTokens[4];
+          var userDescription = '';
+
+          for(var i = 5; i < messageTokens.length; i++) {
+            userDescription += messageTokens[i] + ' ';
+          }
+
+
           // Look up project ID
           dovico.getProjects(username).then(function(projects){
 
@@ -120,20 +131,36 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
               console.log("projects listed");
             });
 
-            var projectName = messageTokens[1].toLowerCase();
 
             projects.Assignments.forEach(function(assignment) {
 
-              var assignmentName = assignment.Name.toLowerCase();
+              var projectName = assignment.Name.toLowerCase();
 
-              if(assignmentName === projectName) {
+              if(projectName === userProjectName) {
 
                 var projectCode = assignment.ProjectID;
                 var projectID = assingment.ItemID;
 
                 dovico.getTasks(projectID).then(function(tasks) {
 
-                  var taskName = messageTokens[2].toLowerCase();
+                  console.log(tasks);
+
+
+                  // TODO: verify task json format
+                  tasks.forEach(function(task) {
+
+                    var taskname = task.Name.toLowerCase();
+
+                    if(taskName === userTaskName) {
+
+
+
+                    }
+
+                  });
+
+
+
                 });
               }
             });
