@@ -61,25 +61,20 @@ var enterTime = function(username, projectId, taskId, date, hours, description, 
 var submitTime = function(username, startDate, endDate, callback) {
 
 	getUserId(username, function(err, userId) {
-	  
-	var formData = "";
-
-  	if(err) {
-    	callback(err, null);
-  	} else {
-	  requestPost(username, 'https://api.dovico.com/TimeEntries/Employee/' + userId + '/Submit/?version=5&daterange=' + startDate + '%20' + endDate, formData).then(function(res) {
-		    callback(null, res);
-		  }, function(error) {
-		    callback(error, null);
-		  }
-		);
-  	}
-
-  });
-
-
+		var formData = "";
+	  	if(err) {
+	    	callback(err, null);
+	  	} else {
+		  requestPost(username, 'https://api.dovico.com/TimeEntries/Employee/' + userId + '/Submit/?version=5&daterange=' + startDate + '%20' + endDate, formData).then(function(res) {
+			    callback(null, res);
+			  }, function(error) {
+			    callback(error, null);
+			  }
+			);
+	  	}
+	});
 }
-var viewTimeWithId = function(username, startDate, endDate) {
+var viewTimeForDelete = function(username, startDate, endDate) {
 	return new Promise(function(resolve, reject) {
 		getUserId(username, function(err, userId) {
 			if(err) {
@@ -91,7 +86,7 @@ var viewTimeWithId = function(username, startDate, endDate) {
 					var text = "";
 
 					result.TimeEntries.forEach(function(entry) {
-						if(entry.Employee.ID == userId){
+						if(entry.Employee.ID == userId  && entry.Sheet.Status == 'N' && entry.Sheet.Status == 'R'){
 							text += entry.ID + ' - ' + entry.Date + " - " +  entry.Project.Name + " - " 
 							+ entry.Task.Name + " " + entry.TotalHours + "\n\r";
 						}
@@ -106,6 +101,15 @@ var viewTimeWithId = function(username, startDate, endDate) {
 		});
 	});
 };
+var statusEmoji = function(statusText){
+	if(statusText == 'R') {  //rejected
+		return ':thumbsdown:';
+	} else 	if(statusText == 'N'){ //unsubmitted
+		return ':small_red_triangle:';
+	} else if(statusText == 'A' || statusText == 'U') { //appproved
+		return ':small_blue_diamond:' + statusText; //su
+	}
+}
 var viewTime = function(username, startDate, endDate) {
 	return new Promise(function(resolve, reject) {
 		getUserId(username, function(err, userId) {
@@ -119,7 +123,7 @@ var viewTime = function(username, startDate, endDate) {
 
 					result.TimeEntries.forEach(function(entry) {
 						if(entry.Employee.ID == userId){
-							text += entry.Date + " - " +  entry.Project.Name + " - " 
+							text += statusEmoji(entry.Sheet.Status) + entry.Date + " - " +  entry.Project.Name + " - " 
 							+ entry.Task.Name + " " + entry.TotalHours + "\n\r";
 						}
 					});
@@ -359,6 +363,6 @@ module.exports = {
   'submitTime' : submitTime,
   'deleteTime' : deleteTime,
   'openDovico' : openDovico,
-  'viewTimeWithId' : viewTimeWithId,
+  'viewTimeForDelete' : viewTimeForDelete,
   'getProjectIdByName' : getProjectIdByName
 };

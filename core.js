@@ -192,8 +192,8 @@ var tokenCommands = {
       var startDate,endDate;
       startDate = utilities.startOfWeek();
       endDate = utilities.endOfWeek();
-      dovico.viewTimeWithId(username, startDate, endDate).then(function(time){
-          rtm.sendMessage('Time for ' + startDate + ' to ' + endDate + '\n' + time, message.channel, function messageSent() {
+      dovico.viewTimeForDelete(username, startDate, endDate).then(function(time){
+          rtm.sendMessage('Unsubmitted Time Entries for ' + startDate + ' to ' + endDate + '\n' + time, message.channel, function messageSent() {
             console.log("view time" , time);
           });
         },
@@ -304,7 +304,7 @@ var tokenCommands = {
       dovico.getTasks(username, assignment.assignmentId).then(function(tasks){
         var taskText = "Your Tasks for " + projectName + ": ";
         tasks.Assignments.forEach(function(task) {
-          taskText += "\n\r" + task.Name;
+          taskText += "\r\n\t" + task.Name;
         });
 
         rtm.sendMessage(taskText, message.channel, function messageSent() {
