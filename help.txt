@@ -11,8 +11,8 @@
     In a direct message to @dovibot: `projects`
 
 
-*List available tasks*:
-    In a direct message to @dovibot: `tasks`
+*List available tasks for a given project*:
+    In a direct message to @dovibot: `tasks <project>`
 
 
 *To enter a timesheet entry*: 
