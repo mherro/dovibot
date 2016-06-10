@@ -3,6 +3,7 @@ var MemoryDataStore = require('@slack/client').MemoryDataStore;
 
 var moment = require('moment');
 var utilities = require('./utilities');
+var cron = require('./cron');
 
 var token = process.env.SLACK_API_TOKEN || '';
 
@@ -390,6 +391,8 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 
 
 rtm.start();
+
+cron.init(rtm);
 
 function censor(censor) {
   var i = 0;

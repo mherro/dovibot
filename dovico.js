@@ -134,6 +134,33 @@ var viewTime = function(username, startDate, endDate) {
 	});
 };
 
+var getTotalHours = function(username, startDate, endDate) {
+	return new Promise(function(resolve, reject) {
+		getUserId(username, function(err, userId) {
+			if(err) {
+				reject(err);
+			} else {
+				var url = 'https://api.dovico.com/TimeEntries/?version=5&daterange=' + startDate + '%20' + endDate;
+				console.log('viewing time for :', url);
+				requestGet(username,url).then(function(result){
+					var totalHours = 0;
+					result.TimeEntries.forEach(function(entry) {
+						if(entry.Employee.ID == userId){
+							totalHours += parseFloat(entry.TotalHours);
+						}
+					});
+
+					resolve(totalHours);
+				},
+				function(error){
+					reject(error);
+				});
+			}
+		});
+	});
+};
+
+
 
 var deleteTime = function(username, timeEntryId, callback) {
   requestDelete(username, 'https://api.dovico.com/TimeEntries/' + timeEntryId + '?version=5').then(function(res) {
@@ -287,6 +314,7 @@ module.exports = {
 	'getProjects' : getProjects,
 	'getTasks' : getTasks,
 	'viewTime' : viewTime,
+	'getTotalHours' : getTotalHours,
 	'getUserId' : getUserId,
   'enterTime' : enterTime,
   'submitTime' : submitTime,

@@ -30,5 +30,8 @@ module.exports = {
 	},
 	deleteToken: function(userId, token, callback){
 		client.del(userId, callback);
+	},
+	everyone: function(callback) {
+		client.keys("*", callback);
 	}
 };
