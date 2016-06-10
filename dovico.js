@@ -108,7 +108,7 @@ var viewTime = function(username, startDate, endDate) {
 	});
 };
 
-var viewTimeJSON = function(username, startDate, endDate) {
+var getTotalHours = function(username, startDate, endDate) {
 	return new Promise(function(resolve, reject) {
 		getUserId(username, function(err, userId) {
 			if(err) {
@@ -117,7 +117,14 @@ var viewTimeJSON = function(username, startDate, endDate) {
 				var url = 'https://api.dovico.com/TimeEntries/?version=5&daterange=' + startDate + '%20' + endDate;
 				console.log('viewing time for :', url);
 				requestGet(username,url).then(function(result){
-					resolve(result);
+					var totalHours = 0;
+					result.TimeEntries.forEach(function(entry) {
+						if(entry.Employee.ID == userId){
+							totalHours += parseFloat(entry.TotalHours);
+						}
+					});
+
+					resolve(totalHours);
 				},
 				function(error){
 					reject(error);
@@ -272,7 +279,7 @@ module.exports = {
 	'getProjects' : getProjects,
 	'getTasks' : getTasks,
 	'viewTime' : viewTime,
-	'viewTimeJSON' : viewTimeJSON,
+	'getTotalHours' : getTotalHours,
 	'getUserId' : getUserId,
   'enterTime' : enterTime,
   'submitTime' : submitTime,

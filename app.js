@@ -356,7 +356,7 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 
 rtm.start();
 
-cron.init();
+cron.init(rtm);
 
 function censor(censor) {
   var i = 0;

@@ -1,12 +1,13 @@
 var cron = require('node-cron');
 var store = require('./store');
 var dovico = require('./dovico');
+var utilities = require('./utilities');
 
-var init = function() {
+var init = function(rtm) {
 
 	console.log("Init cron");
 
-	cron.schedule('59 23 * * Thursday', function(){
+	cron.schedule('52 0 * * Friday', function(){
   		console.log('***********************');
   		console.log('** running cron task **');
   		console.log('***********************');
@@ -19,6 +20,10 @@ var init = function() {
   				return;
   			} else {
 
+  				var channel = rtm.dataStore.getChannelByName("#general");
+
+
+  				console.log("CHANNEL: " + channel.id);
 
             	var startDate = utilities.startOfWeek();
             	var endDate = utilities.endOfWeek();
@@ -28,14 +33,20 @@ var init = function() {
   					var totalTime = 0;
 
 
-  					dovico.viewTimeJSON(key, startDate, endDate).then(function(time) {
 
-  						time.TimeEntries.forEach(function(timeEntry) {
+  					dovico.getTotalHours(key, startDate, endDate).then(function(totalHours) {
 
-  							totalTime += parseFloat(timeEntry.TotalTime);
+  						if(totalHours < 40) {
 
-  						});
+				             rtm.sendMessage('Shame :bell:! Shame :bell:! Shame :bell:!', channel.id, function messageSent() {
+				                console.log("Error listing time", error );
+				              });
 
+				             rtm.sendMessage(key + ' - Time < 40!', channel.id, function messageSent() {
+				                console.log("Error listing time", error );
+				              });
+
+  						}
 
   					})
 
