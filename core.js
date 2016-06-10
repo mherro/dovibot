@@ -48,7 +48,15 @@ var tokenCommands = {
       endDate = utilities.endOfWeek();
     }  
     dovico.viewTime(username, startDate, endDate).then(function(time){
-        rtm.sendMessage('Time for ' + startDate + ' to ' + endDate + '\n' + time, message.channel, function messageSent() {
+        var timeMessage = 'Time for ' + startDate;
+
+        if (startDate != endDate) {
+          timeMessage = timeMessage + ' to ' + endDate;
+        }
+
+        timeMessage = timeMessage + '\n';
+
+        rtm.sendMessage(timeMessage + time, message.channel, function messageSent() {
           console.log("view time" , time);
         });
       },
