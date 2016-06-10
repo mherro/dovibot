@@ -170,7 +170,28 @@ var deleteTime = function(username, timeEntryId, callback) {
     callback(error, null);
   });
 }
+var getProjectIdByName = function(username, projectName) {
+	return new Promise(function(resolve, reject) {
+		getProjects(username).then(
+			function(projects){
+				var _assignment = null;
+				projects.Assignments.forEach(function(assignment) {
+	                var _projectName = assignment.Name.toLowerCase();
+	                console.log('projectName: ' + _projectName + ', userProjectName: ' + projectName);
 
+	                if(projectName.toLowerCase() === _projectName.toLowerCase()) {
+	                    console.log('Found it! ' + assignment.ItemID)
+	                    _assignment = {assignmentId:assignment.AssignmentID, projectId : assignment.ItemID};
+	                    resolve(_assignment);
+	                }
+	            });
+	            if(!_assignment){
+	            	reject('Project Name not found');
+	            }
+			}
+		,reject);
+	});
+}
 
 
 var getProjects = function(username) {
@@ -180,7 +201,7 @@ var getProjects = function(username) {
 var clientid = process.env.DOVICO_CLIENT_ID;
 
 var getTasks = function(username, projectID) {
-	return requestGet(username, 'https://api.dovico.com/Assignments/P' + projectID + '?version=5')
+	return requestGet(username, 'https://api.dovico.com/Assignments/' + projectID + '?version=5')
 };
 
 var openDovico = function(callback) {
@@ -320,5 +341,6 @@ module.exports = {
   'submitTime' : submitTime,
   'deleteTime' : deleteTime,
   'openDovico' : openDovico,
-  'viewTimeWithId' : viewTimeWithId
+  'viewTimeWithId' : viewTimeWithId,
+  'getProjectIdByName' : getProjectIdByName
 };
