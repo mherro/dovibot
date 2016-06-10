@@ -278,7 +278,8 @@ var tokenCommands = {
             console.log('no tasks', project);
           } else 
           project.tasks.forEach(function(task){ 
-            text += "\r\n\t" + company.CompanyName +  " - " + project.ProjectName + " - " + task.TaskName;
+            text += "\r\n\t" + company.CompanyName +  " - " + project.ProjectName + " - " + task.TaskName 
+             + '\r\n\t to `alias add <name> ' + project.ProjectId + ' ' + task.TaskId + '\r\n';
           });
         });
          
