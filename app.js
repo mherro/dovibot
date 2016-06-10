@@ -332,6 +332,12 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
               }); 
             } 
           });
+
+          dovico.openDovico(function(loginUrl) {
+            rtm.sendMessage(loginUrl, message.channel, function messageSent() {
+              console.log(loginUrl, err);
+            } 
+          });
         }
       }
 
