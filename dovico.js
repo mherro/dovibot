@@ -225,11 +225,11 @@ var viewTimeForDelete = function(username, startDate, endDate) {
 };
 var statusEmoji = function(statusText){
 	if(statusText == 'R') {  //rejected
-		return ':thumbsdown: ';
-	} else 	if(statusText == 'N'){ //unsubmitted
-		return ':small_red_triangle: ';
+		return ':x:';
+	} else if(statusText == 'N'){ //unsubmitted
+		return ':hourglass_flowing_sand:';
 	} else if(statusText == 'A' || statusText == 'U') { //appproved
-		return ':small_blue_diamond: '; //su
+		return ':white_check_mark:' + statusText; //su
 	}
 }
 var viewTime = function(username, startDate, endDate) {
@@ -281,6 +281,9 @@ var getTotalHours = function(username, startDate, endDate) {
 							}
 						}
 					});
+
+					totalHours = Number(totalHours.toFixed(2));
+					submittedHours = Number(submittedHours.toFixed(2));
 
 					console.log('>>> totalHours: ' + totalHours + ", submittedHours: " + submittedHours);
 

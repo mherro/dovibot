@@ -34,8 +34,22 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
     return;
   }
 
-  if(message.user === null) {
+  if(message.subtype === "bot_message") {
+    console.log("Ignoring bot message");
+    return;
+  }
+
+  if(!message.user) {
     console.log("Message user not specified");
+    return;
+  }
+
+  var user = rtm.dataStore.getUserById(message.user);
+
+  console.log("user: " + user);
+
+  if(!user) {
+    console.log("Message user not in data store: " + message.user);
     return;
   }
 
