@@ -1,5 +1,7 @@
 var store = require('./store');
 var dovico = require('./dovico');
+var moment = require('./moment');
+
 var commands = {
   'setup':function(rtm, message, username, messageTokens){
     var userToken = messageTokens[1];
@@ -172,8 +174,6 @@ var tokenCommands = {
 
                   });
               }
-
-
             });
   },
   'delete': function(rtm, message, username, messageTokens) {
