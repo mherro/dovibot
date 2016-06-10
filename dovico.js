@@ -245,7 +245,7 @@ var viewTime = function(username, startDate, endDate) {
 					var totalTime = 0;
 					result.TimeEntries.forEach(function(entry) {
 						if(entry.Employee.ID == userId){
-							text += statusEmoji(entry.Sheet.Status) + entry.Date + " : " +  entry.Project.Name + " - " 
+							text += statusEmoji(entry.Sheet.Status) + ' ' + entry.Date + " : " +  entry.Project.Name + " - " 
 							+ entry.Task.Name + " " + entry.TotalHours + "\n\r";
 							totalTime += parseFloat(entry.TotalHours);
 						}
