@@ -251,7 +251,7 @@ var viewTime = function(username, startDate, endDate) {
 						}
 					});
 
-					text += ' \n\r  Total Hours: ' + totalTime;
+					text += ' \n\r  Total Hours: ' + totalTime.toFixed(2);
 
 					resolve(text);
 				},
