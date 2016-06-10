@@ -245,8 +245,14 @@ var viewTime = function(username, startDate, endDate) {
 					var totalTime = 0;
 					result.TimeEntries.forEach(function(entry) {
 						if(entry.Employee.ID == userId){
+              hoursWord = "hour"
+
+              if (entry.TotalHours != "1") {
+                hoursWord += "s";
+              }
+
 							text += statusEmoji(entry.Sheet.Status) + ' ' + entry.Date + " : " +  entry.Project.Name + " - " 
-							+ entry.Task.Name + " " + entry.TotalHours + "\n\r";
+							+ entry.Task.Name + " : " + entry.TotalHours + " " + hoursWord + " : " + entry.Description + "\n\r";
 							totalTime += parseFloat(entry.TotalHours);
 						}
 					});
