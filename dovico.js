@@ -298,7 +298,7 @@ var requestPost = function(username, url, formData) {
 					console.log('request error: ', error, response.statusCode);
 
 					if(!error) {
-						error = "Status code: " + response.statusCode;
+						error = JSON.parse(body).Description;
 					}
 
 					reject(error);

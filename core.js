@@ -171,7 +171,7 @@ var tokenCommands = {
 
                         if(err){
                           console.log('Error getting token', err);
-                          rtm.sendMessage('Error saving time!', message.channel);  
+                          rtm.sendMessage('Error saving time! ' + err, message.channel);  
                         } else {
                           console.log('Successfully entered time');
                           rtm.sendMessage('Time successfully saved! :smile:', message.channel);  
