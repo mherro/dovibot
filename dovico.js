@@ -212,6 +212,9 @@ var getTotalHours = function(username, startDate, endDate) {
 						}
 					});
 
+					totalHours = Number(totalHours.toFixed(2));
+					submittedHours = Number(submittedHours.toFixed(2));
+
 					console.log('>>> totalHours: ' + totalHours + ", submittedHours: " + submittedHours);
 
 					var result = {
