@@ -43,6 +43,8 @@ var tokenCommands = {
     var startDate,endDate;
     if(messageTokens[1] === "today"){ 
       endDate = startDate = utilities.today();
+    } else if(messageTokens[1] === "yesterday"){ 
+      endDate = startDate = utilities.yesterday();
     } else {
       startDate = utilities.startOfWeek();
       endDate = utilities.endOfWeek();

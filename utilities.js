@@ -10,6 +10,8 @@ module.exports = {
 	},
 	today : function(){
 		return moment().format('YYYY-MM-DD');
+	},
+	yesterday : function() {
+		return moment().add(-1,'days').format('YYYY-MM-DD');
 	}
-
 }
