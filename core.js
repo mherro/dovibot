@@ -48,7 +48,15 @@ var tokenCommands = {
       endDate = utilities.endOfWeek();
     }  
     dovico.viewTime(username, startDate, endDate).then(function(time){
-        rtm.sendMessage('Time for ' + startDate + ' to ' + endDate + '\n' + time, message.channel, function messageSent() {
+        var timeMessage = 'Time for ' + startDate;
+
+        if (startDate != endDate) {
+          timeMessage = timeMessage + ' to ' + endDate;
+        }
+
+        timeMessage = timeMessage + '\n';
+
+        rtm.sendMessage(timeMessage + time, message.channel, function messageSent() {
           console.log("view time" , time);
         });
       },
@@ -65,7 +73,7 @@ var tokenCommands = {
             var ENTER_COMMAND = "enter";
             if(messageTokens.length < 6) {
               console.log(ENTER_COMMAND + ": Not enough data");
-              rtm.sendMessage('Error! Command format: ' + ENTER_COMMAND + ' Hackathon Development 2016-06-08 8 "Worked on slackico"', message.channel);
+              rtm.sendMessage('Error! Command format: ' + ENTER_COMMAND + ' Hackathon Development 2016-06-08 8 Worked on slackico', message.channel);
               return;
             }
 
@@ -163,7 +171,7 @@ var tokenCommands = {
 
                         if(err){
                           console.log('Error getting token', err);
-                          rtm.sendMessage('Error saving time!', message.channel);  
+                          rtm.sendMessage('Error saving time! ' + err, message.channel);  
                         } else {
                           console.log('Successfully entered time');
                           rtm.sendMessage('Time successfully saved! :smile:', message.channel);  
@@ -329,6 +337,52 @@ var tokenCommands = {
     function(error) {
       rtm.sendMessage(':smile: Project not found, try running the command `projects` to see all projects', message.channel);
     });
+  },
+  'shame': function(rtm, message, username, messageTokens){
+
+      store.everyone(function(error, keys) {
+
+        if(error) {
+          console.log("Error getting keys: " + error);
+          return;
+        } else {
+
+          var channel = rtm.dataStore.getChannelByName("#general");
+          console.log("CHANNEL: " + channel.id);
+
+          var startDate = utilities.startOfWeek();
+          var endDate = utilities.endOfWeek();
+
+          keys.forEach(function(key) {
+
+
+            console.log("Do we need to shame " + key + "?");
+
+            dovico.getTotalHours(key, startDate, endDate).then(function(result) {
+
+              console.log("result.totalHours: " + result.totalHours + ", result.submittedHours: " + result.submittedHours);
+
+              if(result.submittedHours < 40) {
+
+                     rtm.sendMessage('Shame :bell:! Shame :bell:! Shame :bell:!', channel.id, function messageSent() {
+                        console.log("Shamed " + key );
+                      });
+
+                     rtm.sendMessage('@' + key + ' - Time < 40! Entered: ' + result.totalHours + ', Submitted: ' + result.submittedHours, channel.id, function messageSent() {
+                        console.log(key + ' - Time < 40! Entered: ' + result.totalHours + ', Submitted: ' + result.submittedHours);
+                      });
+
+              } else {
+                console.log("GOOD JOB " + key + "!");
+              }
+
+
+            })
+
+          });
+        }
+
+      });
   }
 };
 

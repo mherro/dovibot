@@ -30,19 +30,15 @@ var init = function(rtm) {
 
   				keys.forEach(function(key) {
 
-  					var totalTime = 0;
+  					dovico.getTotalHours(key, startDate, endDate).then(function(totalHours, submittedHours) {
 
-
-
-  					dovico.getTotalHours(key, startDate, endDate).then(function(totalHours) {
-
-  						if(totalHours < 40) {
+  						if(submittedHours < 40) {
 
 				             rtm.sendMessage('Shame :bell:! Shame :bell:! Shame :bell:!', channel.id, function messageSent() {
 				                console.log("Error listing time", error );
 				              });
 
-				             rtm.sendMessage(key + ' - Time < 40!', channel.id, function messageSent() {
+				             rtm.sendMessage(key + ' - Time < 40! Entered: ' + totalHours + ', Submitted: ' + submittedHours, channel.id, function messageSent() {
 				                console.log("Error listing time", error );
 				              });
 
@@ -50,12 +46,8 @@ var init = function(rtm) {
 
   					})
 
-
-
   				});
-
   			}
-
 
   		});
 

@@ -1,4 +1,12 @@
-Command:  enter <project> <task> <yyyy-mm-dd> <hours> <description>
-Command:  view today
-Command:  view 
-Command:  submit 
+To enter a timesheet entry: `enter <project> <task> <yyyy-mm-dd> <hours> <description>`
+
+To view your timesheet:
+  - Today only: `view today`
+  - Current week (Mon - Sun): `view`
+
+To delete a timesheet entry:
+  - List deletable entries: `delete`
+  - To delete a specific entry: `delete <alphanumeric-guid>`
+    - Example: `delete Te5ffa04c-1218-48f6-ba8d-84966857e0dc`
+
+To submit your timesheet: `submit`
