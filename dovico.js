@@ -108,6 +108,26 @@ var viewTime = function(username, startDate, endDate) {
 	});
 };
 
+var viewTimeJSON = function(username, startDate, endDate) {
+	return new Promise(function(resolve, reject) {
+		getUserId(username, function(err, userId) {
+			if(err) {
+				reject(err);
+			} else {
+				var url = 'https://api.dovico.com/TimeEntries/?version=5&daterange=' + startDate + '%20' + endDate;
+				console.log('viewing time for :', url);
+				requestGet(username,url).then(function(result){
+					resolve(result);
+				},
+				function(error){
+					reject(error);
+				});
+			}
+		});
+	});
+};
+
+
 
 var getProjects = function(username) {
 	return requestGet(username,'https://api.dovico.com/Assignments/?version=5');
@@ -203,6 +223,7 @@ module.exports = {
 	'getProjects' : getProjects,
 	'getTasks' : getTasks,
 	'viewTime' : viewTime,
+	'viewTimeJSON' : viewTimeJSON,
 	'getUserId' : getUserId,
   'enterTime' : enterTime,
   'submitTime' : submitTime,
