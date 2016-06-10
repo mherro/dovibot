@@ -86,7 +86,7 @@ var viewTimeForDelete = function(username, startDate, endDate) {
 					var text = "";
 
 					result.TimeEntries.forEach(function(entry) {
-						if(entry.Employee.ID == userId  && entry.Sheet.Status == 'N'){
+						if(entry.Employee.ID == userId  && entry.Sheet.Status == 'N' && entry.Sheet.Status == 'R'){
 							text += entry.ID + ' - ' + entry.Date + " - " +  entry.Project.Name + " - " 
 							+ entry.Task.Name + " " + entry.TotalHours + "\n\r";
 						}
@@ -106,7 +106,7 @@ var statusEmoji = function(statusText){
 		return ':thumbsdown:';
 	} else 	if(statusText == 'N'){ //unsubmitted
 		return ':small_red_triangle:';
-	} else if(statusText == 'A' || statusText == 'R') { //appproved
+	} else if(statusText == 'A' || statusText == 'U') { //appproved
 		return ':small_blue_diamond:' + statusText; //su
 	}
 }
