@@ -6,7 +6,7 @@ module.exports = {
 		return moment().startOf('isoweek').format('YYYY-MM-DD')
 	},
 	endOfWeek : function(){
-		return moment().endOf('week').format('YYYY-MM-DD');
+		return moment().endOf('week').add(1,'days').format('YYYY-MM-DD');
 	},
 	today : function(){
 		return moment().format('YYYY-MM-DD');
