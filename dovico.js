@@ -103,11 +103,11 @@ var viewTimeForDelete = function(username, startDate, endDate) {
 };
 var statusEmoji = function(statusText){
 	if(statusText == 'R') {  //rejected
-		return ':thumbsdown:';
+		return ':thumbsdown: ';
 	} else 	if(statusText == 'N'){ //unsubmitted
-		return ':small_red_triangle:';
+		return ':small_red_triangle: ';
 	} else if(statusText == 'A' || statusText == 'U') { //appproved
-		return ':small_blue_diamond:' + statusText; //su
+		return ':small_blue_diamond: '; //su
 	}
 }
 var viewTime = function(username, startDate, endDate) {
@@ -123,7 +123,7 @@ var viewTime = function(username, startDate, endDate) {
 
 					result.TimeEntries.forEach(function(entry) {
 						if(entry.Employee.ID == userId){
-							text += statusEmoji(entry.Sheet.Status) + entry.Date + " - " +  entry.Project.Name + " - " 
+							text += statusEmoji(entry.Sheet.Status) + entry.Date + " : " +  entry.Project.Name + " - " 
 							+ entry.Task.Name + " " + entry.TotalHours + "\n\r";
 						}
 					});
