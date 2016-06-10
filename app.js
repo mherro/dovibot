@@ -30,6 +30,7 @@ var TASKS_COMMAND = "tasks";
 var INFO_COMMAND = "info";
 var HELP_COMMAND = "help";
 var DELETE_COMMAND = "delete";
+var OPEN_COMMAND = "open";
 
 rtm.on(RTM_EVENTS.MESSAGE, function (message) {
   // Listens to all `message` events from the team
@@ -250,7 +251,7 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 
 
             });
-        }  else if(commandToken === VIEW_COMMAND) {
+        } else if(commandToken === VIEW_COMMAND) {
           var startDate,endDate;
           if(messageTokens[1] === "today"){ 
             endDate = startDate = utilities.today();
@@ -331,12 +332,42 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
               }); 
             } 
           });
+
         } else if(commandToken === DELETE_COMMAND) {
           if(messageTokens.length == 1){
-
+            var startDate,endDate;
+            startDate = utilities.startOfWeek();
+            endDate = utilities.endOfWeek();
+            dovico.viewTimeWithId(username, startDate, endDate).then(function(time){
+                rtm.sendMessage('Time for ' + startDate + ' to ' + endDate + '\n' + time, message.channel, function messageSent() {
+                  console.log("view time" , time);
+                });
+              },
+              function(error){
+               rtm.sendMessage('Error listing time', message.channel, function messageSent() {
+                  console.log("Error listing time", error );
+                });
+              }
+            );
           } else {
-            
+            dovico.deleteTime(username, messageTokens[1], function(error, result){
+              if(error) {
+               rtm.sendMessage('Error deleting time', message.channel, function messageSent() {
+                  console.log("Error listing time", error );
+                });
+              } else {
+                rtm.sendMessage('Time deleted\n\r' + result, message.channel, function messageSent() {
+                  console.log("time delete" , result);
+                });
+              }
+            });
           }
+        } else if(commandToken === OPEN_COMMAND) {
+          dovico.openDovico(function(loginUrl) {
+            rtm.sendMessage(loginUrl, message.channel, function messageSent() {
+              console.log(loginUrl, err);
+            });
+          });
         }
       }
 
@@ -344,8 +375,7 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
       store.getToken(username, function(error, token) {
           if(!error && token){
             console.log('all else', token);
-           allElse(rtm, message);
-
+            allElse(rtm, message);
           } else {
             rtm.sendMessage('Error getting token. Please use help on how to enable your token.', message.channel, function messageSent() {
               console.log("Error getting token", error);
