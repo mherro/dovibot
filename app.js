@@ -51,16 +51,16 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
     if(messageTokens.length > 0) {
 
       var commandToken = messageTokens[0].toLowerCase();
-      if(core.logic[commandToken]){ // functions that do not require a token to be setup
-        core.logic[commandToken](rtm,message, username, messageTokens); 
+      if(core.commands[commandToken]){ // functions that do not require a token to be setup
+        core.commands[commandToken](rtm,message, username, messageTokens); 
       }
 
       //the rest of the command require a token, so check if the user has a token yet
       store.getToken(username, function(error, token) {
         if(!error && token){
           console.log('all else', token);
-          if(core.tokenLogic[commandToken]){ // functions that do require a token to be setup
-            core.tokenLogic[commandToken](rtm,message, username, messageTokens); 
+          if(core.tokenCommands[commandToken]){ // functions that do require a token to be setup
+            core.tokenCommands[commandToken](rtm,message, username, messageTokens); 
           } else {
             rtm.sendMessage('command not found try `help`', message.channel);
           }

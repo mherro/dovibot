@@ -1,6 +1,6 @@
 var store = require('./store');
 var dovico = require('./dovico');
-var logic = {
+var commands = {
   'setup':function(rtm, message, username, messageTokens){
     var userToken = messageTokens[1];
     dovico.setupToken(username, userToken).then(
@@ -28,7 +28,7 @@ var logic = {
   }
 };
 
-var tokenLogic = {
+var tokenCommands = {
   'open': function(rtm, message) {
     dovico.openDovico(function(loginUrl) {
       rtm.sendMessage(loginUrl, message.channel, function messageSent() {
@@ -312,4 +312,4 @@ var tokenLogic = {
   }
 };
 
-module.exports = {'logic':logic, 'tokenLogic':tokenLogic};
+module.exports = {'commands':commands, 'tokenCommands':tokenCommands};
