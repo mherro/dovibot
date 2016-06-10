@@ -129,6 +129,10 @@ var getTasks = function(username, projectID) {
 	return requestGet(username, 'https://api.dovico.com/Assignments/P' + projectID + '?version=5')
 };
 
+var openDovico = function(callback) {
+  callback('https://login.dovico.com')
+};
+
 var requestGet = function(username,url) {
 	return new Promise(function(resolve, reject) {
 		store.getToken(username, function(err, token){
@@ -256,4 +260,5 @@ module.exports = {
   'enterTime' : enterTime,
   'submitTime' : submitTime,
   'deleteTime' : deleteTime,
+  'openDovico' : openDovico,
 };
