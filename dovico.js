@@ -234,6 +234,11 @@ var requestGet = function(username,url) {
 					console.log("request response", body);
 					resolve(info);
 				} else {
+
+					if(!error) {
+						error = "Status code: " + response.statusCode;
+					}
+					
 					console.log('request error:', error, response.statusCode);
 					reject(error);
 				}
