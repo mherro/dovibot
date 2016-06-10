@@ -242,13 +242,16 @@ var viewTime = function(username, startDate, endDate) {
 				console.log('viewing time for :', url);
 				requestGet(username,url).then(function(result){
 					var text = "";
-
+					var totalTime = 0;
 					result.TimeEntries.forEach(function(entry) {
 						if(entry.Employee.ID == userId){
 							text += statusEmoji(entry.Sheet.Status) + entry.Date + " : " +  entry.Project.Name + " - " 
 							+ entry.Task.Name + " " + entry.TotalHours + "\n\r";
+							totalTime += parseFloat(entry.TotalHours);
 						}
 					});
+
+					text += ' \n\r  Total Hours: ' + totalTime;
 
 					resolve(text);
 				},
