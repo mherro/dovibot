@@ -1,7 +1,10 @@
 *Setup*:
     - Load your user token:
         1. Generate API token in Dovico. 
-            a. Open Dovico -> Click the "Options" tab -> Click "Generate" button at the bottom of the page.
+            a. Open Dovico -> Click the "Options" tab. At the bottom of a page:
+                i. If a token already exists, copy the token.
+                ii. If the token field is blank, click the "Generate" button, then copy the token.
+
         2. Copy the newly generated API token from Dovico.
         3. In Slack, start a direct message to @dovibot
         4. Send message: `setup <token>`

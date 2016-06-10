@@ -80,7 +80,7 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
             rtm.sendMessage('command not found try `help`', message.channel);
           }
         } else {
-          rtm.sendMessage('Error getting token. Please use help on how to enable your token.', message.channel, function messageSent() {
+          rtm.sendMessage('Error getting token. Please use `help` on how to enable your token.', message.channel, function messageSent() {
             console.log("Error getting token", error);
           }); 
         } 
