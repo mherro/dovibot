@@ -60,7 +60,7 @@ var tokenCommands = {
     );
   },
   'enter': function(rtm,message, username, messageTokens) {
-// Command format:
+            // Command format:
             // > enter Hackathon Development 2016-06-08 8 "Worked on slackico"
             var ENTER_COMMAND = "enter";
             if(messageTokens.length < 6) {
@@ -173,8 +173,18 @@ var tokenCommands = {
 
                     }
 
+                  },
+                  function(error){
+                   rtm.sendMessage('Error validating task: ' + error, message.channel, function messageSent() {
+                      console.log("Error validating task: " + error);
+                    });
                   });
               }
+            },
+            function(error){
+             rtm.sendMessage('Error validating project: ' + error, message.channel, function messageSent() {
+                console.log("Error validating project: " + error);
+              });
             });
   },
   'delete': function(rtm, message, username, messageTokens) {
@@ -228,7 +238,7 @@ var tokenCommands = {
         });
       } else {
         rtm.sendMessage('Error getting userId', message.channel, function messageSent() {
-          console.log("Error getting userId", err);
+          console.log("Error getting userId", error);
         }); 
       } 
     });
