@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "@slack/client": "3.1.0",
+    "async": "^2.0.0-rc.6",
     "bluebird": "^3.4.0",
     "moment": "^2.13.0",
     "node-cron": "^1.1.1",

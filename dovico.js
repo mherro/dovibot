@@ -57,7 +57,59 @@ var enterTime = function(username, projectId, taskId, date, hours, description, 
   });
 
 }
+var getTree = function(username) {
+	return new Promise(function(resolve, reject) {
+		getProjects(username).then(
+			function(projects){
+				var _projects = [];
+				var _emptyCompany = {CompanyName:'', projects:[]};
+				_projects.push(_emptyCompany);
+				projects.Assignments.forEach(function(assignment) {
+	                var _projectName = assignment.Name.toLowerCase();
+	              //  console.log('projectName: ' + _projectName + ', userProjectName: ' + projectName);
+	                
 
+	                if(assignment.AssignmentID[0] == 'C'){
+	                	var project = {};
+		                project.CompanyName = assignment.Name;
+		                project.CompanyId =   assignment.ItemID;
+	    	            project.CompanyAssignmentId = assignment.AssignmentID;
+	    	            _projects.push(project);
+	    	        } else if(assignment.AssignmentID[0] == 'P') {
+	    	        	_emptyCompany.projects.push({ 
+	    	        		ProjectName : assignment.Name,
+		                	ProjectId :   assignment.ItemID,
+	    	                ProjectAssignmentId : assignment.AssignmentID});
+	    	        } //else {
+	    	        // 	project.TaskName = assignment.Name;
+		            //     project.TaskId =   assignment.ItemID;
+	    	        //     project.TaskAssignmentId = assignment.AssignmentID;
+	    	        // }
+	    	        var async = require('async');
+	    	        async.each(_projects, function(project,callback){
+	    	        	//getTasks(projects)
+	    	        	callback();
+	    	        }, function(err){
+	    	        	resolve(_projects);
+	    	        });
+	             //   getTasks()
+
+
+	               // loadProjects(username, projects).then(function(projects){
+	                //	return loadTasks(username, projects);
+	                //});
+	                // if(projectName.toLowerCase() === _projectName.toLowerCase()) {
+	                //     console.log('Found it! ' + assignment.ItemID)
+	                //     _assignment = {assignmentId:assignment.AssignmentID, projectId : assignment.ItemID};
+	                //     resolve(_assignment);
+	                // }
+	            });
+	           
+			}
+		,reject);
+	});
+
+}
 var submitTime = function(username, startDate, endDate, callback) {
 
 	getUserId(username, function(err, userId) {
@@ -346,10 +398,11 @@ module.exports = {
 	'viewTime' : viewTime,
 	'getTotalHours' : getTotalHours,
 	'getUserId' : getUserId,
-  'enterTime' : enterTime,
-  'submitTime' : submitTime,
-  'deleteTime' : deleteTime,
-  'openDovico' : openDovico,
-  'viewTimeForDelete' : viewTimeForDelete,
-  'getProjectIdByName' : getProjectIdByName
+	'enterTime' : enterTime,
+	'submitTime' : submitTime,
+	'deleteTime' : deleteTime,
+	'openDovico' : openDovico,
+	'viewTimeForDelete' : viewTimeForDelete,
+	'getProjectIdByName' : getProjectIdByName,
+	'getTree': getTree
 };

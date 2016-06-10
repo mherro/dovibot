@@ -260,6 +260,15 @@ var tokenCommands = {
   'project': function(rtm,message, username, messageTokens){
     rtm.sendMessage('command `project` not found, try projects', message.channel);
   },
+  'tree' :  function(rtm, message, username, messageTokens) {
+    dovico.getTree(username).then(function(tree){
+      var text = "Your Company - Project - Task tree";
+      tree.forEach(function(item){
+         text += "\r\n\t" + item.CompanyName +  " - " + item.ProjectName + " - " + item.TaskName;
+      });
+      rtm.sendMessage(text, message.channel);
+    });
+  },
   'projects':function(rtm,message, username, messageTokens){
     // Command format:
     // > projects"
