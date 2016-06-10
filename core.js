@@ -35,7 +35,7 @@ var tokenCommands = {
   'open': function(rtm, message) {
     dovico.openDovico(function(loginUrl) {
       rtm.sendMessage(loginUrl, message.channel, function messageSent() {
-        console.log(loginUrl, err);
+        console.log(loginUrl);
       });
     });
   },
