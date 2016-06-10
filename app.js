@@ -53,6 +53,7 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
       var commandToken = messageTokens[0].toLowerCase();
       if(core.commands[commandToken]){ // functions that do not require a token to be setup
         core.commands[commandToken](rtm,message, username, messageTokens); 
+        return;
       }
 
       //the rest of the command require a token, so check if the user has a token yet
