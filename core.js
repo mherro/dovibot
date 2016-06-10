@@ -83,18 +83,25 @@ var tokenCommands = {
             var userHours = messageTokens[4];
             var userDescription = '';
 
-
             var projectId = 0;
             var taskId = 0;
 
-            // validate date
-            var dateValid = moment(userDate, "YYYY-MM-DD").isValid();
+            if(userDate == 'today'){
+              userDate = moment().format('YYYY-MM-DD');
+            } else if(userDate == 'yesterday') {
+              userDate = moment().add(-1,'days').format('YYYY-MM-DD');
+            } else {
 
-            if(dateValid === false) {
-              console.log(ENTER_COMMAND + ": Invalid date " + userDate + ", must be YYYY-MM-DD");
-              rtm.sendMessage('Error! Date must be in format `YYYY-MM-DD`', message.channel);
+
+              // validate date
+              var dateValid = moment(userDate, "YYYY-MM-DD").isValid();
+
+              if(dateValid === false) {
+                console.log(ENTER_COMMAND + ": Invalid date " + userDate + ", must be YYYY-MM-DD");
+                rtm.sendMessage('Error! Date must be in format `YYYY-MM-DD`', message.channel);
+                return;
+             }
             }
-
 
             // validate hours
             var userHoursFloat = parseFloat(userHours);
@@ -117,7 +124,6 @@ var tokenCommands = {
               rtm.sendMessage('Error! Description is required', message.channel);
               return;
             }
-
 
             // Look up project ID
             dovico.getProjects(username).then(function(projects){
