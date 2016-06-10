@@ -73,7 +73,7 @@ var tokenCommands = {
             var ENTER_COMMAND = "enter";
             if(messageTokens.length < 6) {
               console.log(ENTER_COMMAND + ": Not enough data");
-              rtm.sendMessage('Error! Command format: ' + ENTER_COMMAND + ' Hackathon Development 2016-06-08 8 Worked on slackico', message.channel);
+              rtm.sendMessage('Error! Command format: `' + ENTER_COMMAND + ' <project> <task> <YYYY-MM-DD> <hours> <description>`\nSee `help` for details.', message.channel);
               return;
             }
 
@@ -92,7 +92,7 @@ var tokenCommands = {
 
             if(dateValid === false) {
               console.log(ENTER_COMMAND + ": Invalid date " + userDate + ", must be YYYY-MM-DD");
-              rtm.sendMessage('Error! Date must be in format YYYY-MM-DD', message.channel);
+              rtm.sendMessage('Error! Date must be in format `YYYY-MM-DD`', message.channel);
             }
 
 
@@ -174,7 +174,7 @@ var tokenCommands = {
                           rtm.sendMessage('Error saving time! ' + err, message.channel);  
                         } else {
                           console.log('Successfully entered time');
-                          rtm.sendMessage('Time successfully saved! :smile:', message.channel);  
+                          rtm.sendMessage('Time successfully saved! :smile: :white_check_mark:', message.channel);  
                         }
 
                       });
@@ -266,7 +266,7 @@ var tokenCommands = {
 
   },
   'project': function(rtm,message, username, messageTokens){
-    rtm.sendMessage('command `project` not found, try projects', message.channel);
+    rtm.sendMessage('command `project` not found, try `projects`', message.channel);
   },
   'tree' :  function(rtm, message, username, messageTokens) {
     dovico.getTree(username).then(function(tree){
@@ -320,7 +320,7 @@ var tokenCommands = {
     }
     projectName = projectName.trim();
     if(!projectName) {
-      rtm.sendMessage('Project Name required (e.g. tasks ProjectName)',message.channel);
+      rtm.sendMessage('Project Name required (e.g. `tasks <ProjectName>`)',message.channel);
       return;
     }
 
