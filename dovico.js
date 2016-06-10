@@ -144,13 +144,26 @@ var getTotalHours = function(username, startDate, endDate) {
 				console.log('viewing time for :', url);
 				requestGet(username,url).then(function(result){
 					var totalHours = 0;
+					var submittedHours = 0;
 					result.TimeEntries.forEach(function(entry) {
 						if(entry.Employee.ID == userId){
-							totalHours += parseFloat(entry.TotalHours);
+							var hours = parseFloat(entry.TotalHours);
+							totalHours += hours;
+
+							if(entry.Sheet.Status == 'A' || entry.Sheet.Status == 'U') {
+								submittedHours += hours;
+							}
 						}
 					});
 
-					resolve(totalHours);
+					console.log('>>> totalHours: ' + totalHours + ", submittedHours: " + submittedHours);
+
+					var result = {
+						totalHours: totalHours,
+						submittedHours: submittedHours
+					}
+
+					resolve(result);
 				},
 				function(error){
 					reject(error);
@@ -234,7 +247,7 @@ var requestGet = function(username,url) {
 					if(!error) {
 						error = "Status code: " + response.statusCode;
 					}
-					
+
 					console.log('request error:', error, response.statusCode);
 					reject(error);
 				}

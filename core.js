@@ -320,6 +320,52 @@ var tokenCommands = {
     function(error) {
       rtm.sendMessage(':smile: Project not found, try running the command `projects` to see all projects', message.channel);
     });
+  },
+  'shame': function(rtm, message, username, messageTokens){
+
+      store.everyone(function(error, keys) {
+
+        if(error) {
+          console.log("Error getting keys: " + error);
+          return;
+        } else {
+
+          var channel = rtm.dataStore.getChannelByName("#general");
+          console.log("CHANNEL: " + channel.id);
+
+          var startDate = utilities.startOfWeek();
+          var endDate = utilities.endOfWeek();
+
+          keys.forEach(function(key) {
+
+
+            console.log("Do we need to shame " + key + "?");
+
+            dovico.getTotalHours(key, startDate, endDate).then(function(result) {
+
+              console.log("result.totalHours: " + result.totalHours + ", result.submittedHours: " + result.submittedHours);
+
+              if(result.submittedHours < 40) {
+
+                     rtm.sendMessage('Shame :bell:! Shame :bell:! Shame :bell:!', channel.id, function messageSent() {
+                        console.log("Shamed " + key );
+                      });
+
+                     rtm.sendMessage('@' + key + ' - Time < 40! Entered: ' + result.totalHours + ', Submitted: ' + result.submittedHours, channel.id, function messageSent() {
+                        console.log(key + ' - Time < 40! Entered: ' + result.totalHours + ', Submitted: ' + result.submittedHours);
+                      });
+
+              } else {
+                console.log("GOOD JOB " + key + "!");
+              }
+
+
+            })
+
+          });
+        }
+
+      });
   }
 };
 
