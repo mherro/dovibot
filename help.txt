@@ -1,12 +1,45 @@
-To enter a timesheet entry: `enter <project> <task> <yyyy-mm-dd> <hours> <description>`
+*Setup*:
+    - Load your user token:
+        1. Generate API token in Dovico. 
+            a. Open Dovico -> Click the "Options" tab -> Click "Generate" button at the bottom of the page.
+        2. Copy the newly generated API token from Dovico.
+        3. In Slack, start a direct message to @dovibot
+        4. Send message: `setup <token>`
 
-To view your timesheet:
-  - Today only: `view today`
-  - Current week (Mon - Sun): `view`
 
-To delete a timesheet entry:
-  - List deletable entries: `delete`
-  - To delete a specific entry: `delete <alphanumeric-guid>`
-    - Example: `delete Te5ffa04c-1218-48f6-ba8d-84966857e0dc`
+*List available projects*:
+    In a direct message to @dovibot: `projects`
 
-To submit your timesheet: `submit`
+
+*List available tasks*:
+    In a direct message to @dovibot: `tasks`
+
+
+*To enter a timesheet entry*: 
+    In a direct message to @dovibot: `enter <project> <task> <yyyy-mm-dd> <hours> <description>`
+
+
+*To view your timesheet*:
+    In a direct message to @dovibot:
+      - Today only: `view today`
+      - Current week (Mon - Sun): `view`
+
+          Indicators:
+            :x: - Rejected
+            :hourglass_flowing_sand: - Not submitted (deletable)
+            :white_check_mark: - Submitted
+
+
+*To delete a timesheet entry*:
+    In a direct message to @dovibot:
+      - List deletable (unsubmitted) entries: `delete`
+      - To delete a specific entry: `delete <alphanumeric-guid>`
+           Example: `delete Te5ffa04c-1218-48f6-ba8d-84966857e0dc`
+
+
+*To submit your timesheet*:
+    In a direct message to @dovibot: `submit`
+
+
+*Quick Link to Dovico.com Login*:
+    In a direct message to @dovibot: `open`
