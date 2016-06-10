@@ -70,7 +70,7 @@ var getTree = function(username) {
 	                
 
 	                if(assignment.AssignmentID[0] == 'C'){
-	                	var project = {};
+	                	var project = {projects:[]};
 		                project.CompanyName = assignment.Name;
 		                project.CompanyId =   assignment.ItemID;
 	    	            project.CompanyAssignmentId = assignment.AssignmentID;
@@ -85,10 +85,80 @@ var getTree = function(username) {
 		            //     project.TaskId =   assignment.ItemID;
 	    	        //     project.TaskAssignmentId = assignment.AssignmentID;
 	    	        // }
+	    	    });
 	    	        var async = require('async');
-	    	        async.each(_projects, function(project,callback){
-	    	        	//getTasks(projects)
-	    	        	callback();
+	    	        async.each(_projects, function(company,callback){
+	    	        	if(company.CompanyId){
+		    	        	getTasks(username, company.CompanyAssignmentId ).then(function(result){
+		    	        		console.log('got projects for company', company, result);
+		    	        		result.Assignments.forEach(function(a){
+		    	        			company.projects.push({ 
+				    	        		ProjectName : a.Name,
+					                	ProjectId :   a.ItemID,
+				    	                ProjectAssignmentId : a.AssignmentID}
+				    	             );
+		    	        		});
+		    	        		async.each(company.projects, function(p,task_callback){
+		    	        			getTasks(username, p.ProjectAssignmentId).then(function(result2){
+		    	        				result2.Assignments.forEach(function(task){
+		    	        					if(!p.tasks){
+		    	        						p.tasks = [];
+		    	        					}
+		    	        					p.tasks.push({
+		    	        						TaskName : task.Name,
+		    	        						TaskId : task.ItemID,
+		    	        						TaskAssignmentId : task.AssignmentID
+		    	        					});
+		    	        				})
+		    	        				task_callback();
+		    	        			},function(err) {
+				    	        		console.log('error loading tree', err);
+				    	        		throw err;
+				    	        	});
+
+
+		    	        		}, function(err){
+		    	        			if(err){
+		    	        				console.log('error loading tree', err);
+		    	        				throw err;
+		    	        			}
+		    	        			callback();
+		    	        		})
+		    	        		
+		    	        	},function(err) {
+		    	        		console.log('error loading tree', err);
+		    	        		throw err;
+		    	        	})
+	    	        	}else {
+	    	        		async.each(company.projects, function(p,task_callback){
+		    	        			getTasks(username, p.ProjectAssignmentId).then(function(result2){
+		    	        				result2.Assignments.forEach(function(task){
+		    	        					if(!p.tasks){
+		    	        						p.tasks = [];
+		    	        					}
+		    	        					p.tasks.push({
+		    	        						TaskName : task.Name,
+		    	        						TaskId : task.ItemID,
+		    	        						TaskAssignmentId : task.AssignmentID
+		    	        					});
+		    	        				})
+		    	        				task_callback();
+		    	        			},function(err) {
+				    	        		console.log('error loading tree', err);
+				    	        		throw err;
+				    	        	});
+
+
+		    	        		}, function(err){
+		    	        			if(err){
+		    	        				console.log('error loading tree', err);
+		    	        				throw err;
+		    	        			}
+		    	        			callback();
+		    	        		})
+	    	        	}
+
+	    	        	
 	    	        }, function(err){
 	    	        	resolve(_projects);
 	    	        });
@@ -103,7 +173,7 @@ var getTree = function(username) {
 	                //     _assignment = {assignmentId:assignment.AssignmentID, projectId : assignment.ItemID};
 	                //     resolve(_assignment);
 	                // }
-	            });
+	        //    });
 	           
 			}
 		,reject);

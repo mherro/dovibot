@@ -270,9 +270,18 @@ var tokenCommands = {
   },
   'tree' :  function(rtm, message, username, messageTokens) {
     dovico.getTree(username).then(function(tree){
+      console.log('task tree', JSON.stringify(tree));
       var text = "Your Company - Project - Task tree";
-      tree.forEach(function(item){
-         text += "\r\n\t" + item.CompanyName +  " - " + item.ProjectName + " - " + item.TaskName;
+      tree.forEach(function(company){
+        company.projects.forEach(function(project){
+          if(!project.tasks){
+            console.log('no tasks', project);
+          } else 
+          project.tasks.forEach(function(task){ 
+            text += "\r\n\t" + company.CompanyName +  " - " + project.ProjectName + " - " + task.TaskName;
+          });
+        });
+         
       });
       rtm.sendMessage(text, message.channel);
     });
