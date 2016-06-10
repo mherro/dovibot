@@ -29,7 +29,7 @@ var PROJECT_COMMAND = "project";
 var TASKS_COMMAND = "tasks";
 var INFO_COMMAND = "info";
 var HELP_COMMAND = "help";
-
+var DELETE_COMMAND = "delete";
 
 rtm.on(RTM_EVENTS.MESSAGE, function (message) {
   // Listens to all `message` events from the team
@@ -331,6 +331,12 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
               }); 
             } 
           });
+        } else if(commandToken === DELETE_COMMAND) {
+          if(messageTokens.length == 1){
+
+          } else {
+            
+          }
         }
       }
 
