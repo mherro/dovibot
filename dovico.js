@@ -208,7 +208,7 @@ var viewTimeForDelete = function(username, startDate, endDate) {
 					var text = "";
 
 					result.TimeEntries.forEach(function(entry) {
-						if(entry.Employee.ID == userId  && entry.Sheet.Status == 'N' && entry.Sheet.Status == 'R'){
+						if(entry.Employee.ID == userId  && (entry.Sheet.Status == 'N' || entry.Sheet.Status == 'R')){
 							text += entry.ID + ' - ' + entry.Date + " - " +  entry.Project.Name + " - " 
 							+ entry.Task.Name + " " + entry.TotalHours + "\n\r";
 						}
@@ -229,7 +229,7 @@ var statusEmoji = function(statusText){
 	} else if(statusText == 'N'){ //unsubmitted
 		return ':hourglass_flowing_sand:';
 	} else if(statusText == 'A' || statusText == 'U') { //appproved
-		return ':white_check_mark:' + statusText; //su
+		return ':white_check_mark:'; //su
 	}
 }
 var viewTime = function(username, startDate, endDate) {
