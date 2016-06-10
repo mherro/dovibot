@@ -65,7 +65,7 @@ var tokenCommands = {
             var ENTER_COMMAND = "enter";
             if(messageTokens.length < 6) {
               console.log(ENTER_COMMAND + ": Not enough data");
-              rtm.sendMessage('Error! Command format: ' + ENTER_COMMAND + ' Hackathon Development 2016-06-08 8 "Worked on slackico"', message.channel);
+              rtm.sendMessage('Error! Command format: ' + ENTER_COMMAND + ' Hackathon Development 2016-06-08 8 Worked on slackico', message.channel);
               return;
             }
 
