@@ -7,7 +7,7 @@ var init = function(rtm) {
 
 	console.log("Init cron");
 
-	cron.schedule('52 0 * * Friday', function(){
+	cron.schedule('0 22 * * Friday', function(){
   		console.log('***********************');
   		console.log('** running cron task **');
   		console.log('***********************');
@@ -21,8 +21,6 @@ var init = function(rtm) {
   			} else {
 
   				var channel = rtm.dataStore.getChannelByName("#general");
-
-
   				console.log("CHANNEL: " + channel.id);
 
             	var startDate = utilities.startOfWeek();
