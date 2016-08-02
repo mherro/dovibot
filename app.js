@@ -1,21 +1,17 @@
 var RtmClient = require('@slack/client').RtmClient;
 var MemoryDataStore = require('@slack/client').MemoryDataStore;
+var RTM_EVENTS = require('@slack/client').RTM_EVENTS;
 
 var moment = require('moment');
-var utilities = require('./utilities');
-var cron = require('./cron');
+var utilities = require('./common/utilities');
+var store = require('./component/store');
+var core = require('./core/core');
+var cron = require('./core/cron');
 
 var token = process.env.SLACK_API_TOKEN || '';
 
-//var token = 'GET TOKEN FROM ENV VARIABLE';
-
 var rtm = new RtmClient(token, {logLevel: 'debug', dataStore: new MemoryDataStore({}) });
 
-
-var RTM_EVENTS = require('@slack/client').RTM_EVENTS;
-
-var store = require('./store');
-var core = require('./core');
 
 rtm.on(RTM_EVENTS.HELLO, function (hello) {
 	console.log("HELLO!");
@@ -94,21 +90,6 @@ rtm.start();
 
 cron.init(rtm);
 
-function censor(censor) {
-  var i = 0;
-
-  return function(key, value) {
-    if(i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value) 
-      return '[Circular]'; 
-
-    if(i >= 29) // seems to be a harded maximum of 30 serialized objects?
-      return '[Unknown]';
-
-    ++i; // so we know we aren't using the original object anymore
-
-    return value;  
-  }
-}
 
 
 

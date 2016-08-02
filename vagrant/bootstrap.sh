@@ -1,4 +1,5 @@
-#~/usr/bin/env bash
+#
+:wq!/usr/bin/env bash
 sudo add-apt-repository ppa:git-core/ppa -y
 apt-get update
 apt-get install -y curl build-essential python-dev libkrb5-dev
@@ -24,8 +25,8 @@ make
 cp src/redis-server /opt/redis/bin/redis-server
 cp src/redis-cli /opt/redis/bin/redis-cli
 
-cp /vagrant/redis.init.d /etc/init.d/redis
-cp /vagrant/redis.conf /etc/redis.conf
+cp /vagrant/vagrant/redis.init.d /etc/init.d/redis
+cp /vagrant/vagrant/redis.conf /etc/redis.conf
 
 mkdir /var/redis
 chmod -R 777 /var/redis

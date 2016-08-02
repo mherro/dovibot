@@ -1,7 +1,7 @@
 var cron = require('node-cron');
-var store = require('./store');
-var dovico = require('./dovico');
-var utilities = require('./utilities');
+var store = require('../component/store');
+var dovico = require('../component/dovico');
+var utilities = require('../common/utilities');
 
 var init = function(rtm) {
 

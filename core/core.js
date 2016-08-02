@@ -1,7 +1,7 @@
-var store = require('./store');
-var dovico = require('./dovico');
+var store = require('../component/store');
+var dovico = require('../component/dovico');
 var moment = require('moment');
-var utilities = require('./utilities');
+var utilities = require('../common/utilities');
 
 var commands = {
   'setup':function(rtm, message, username, messageTokens){
